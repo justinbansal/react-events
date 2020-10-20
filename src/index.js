@@ -1,8 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
-import EventBuilder from './components/EventBuilder';
+import App from './components/App';
+import './css/style.scss';
 
-render(<EventBuilder />, document.querySelector('#root'));
+render(<App />, document.querySelector('#root'));
 
 
 

@@ -1,0 +1,14 @@
+.event-builder {
+  display: flex;
+  flex-wrap: wrap;
+  width: 500px;
+
+  input {
+    width: 100%;
+    padding: 10px;
+  }
+
+  button {
+    background: none;
+  }
+}
