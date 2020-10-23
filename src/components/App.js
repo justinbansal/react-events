@@ -16,10 +16,23 @@ class App extends React.Component {
     })
   }
 
+  componentDidMount = () => {
+    this.loadSampleEvents();
+  }
+
   loadSampleEvents = () => {
     this.setState({
       events: sampleEvents
     })
+  }
+
+  formatMoney = (cents) => {
+    let dollars = cents / 100;
+    dollars = dollars.toLocaleString('en-us', {
+      style: 'currency',
+      currency: 'CAD'
+    })
+    return dollars;
   }
 
   render() {
@@ -33,6 +46,7 @@ class App extends React.Component {
               <Event
                 key={index}
                 details={this.state.events[index]}
+                formatMoney={this.formatMoney}
               />
             ))}
           </ul>
