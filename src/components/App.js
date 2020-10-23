@@ -9,8 +9,8 @@ class App extends React.Component {
   }
 
   addEvent = (event) => {
-    const events = {...this.state.events};
-    events[`event1${Date.now()}`] = event;
+    const events = this.state.events.slice();
+    events.push(event);
     this.setState({
       events: events
     })
