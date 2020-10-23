@@ -39,7 +39,6 @@ class App extends React.Component {
     return (
       <div className="react-events">
         <h1>React Events</h1>
-        <button onClick={this.loadSampleEvents}>Load Sample Events</button>
         <div className="events-list">
           <ul className="events">
             {this.state.events.map((element, index) => (
