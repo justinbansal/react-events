@@ -12,13 +12,13 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
-    this.ref = base.syncState('react-events-b1478/events', {
+    this.EventRef = base.syncState('react-events-b1478/events', {
       context: this,
       state: 'events',
       asArray: true
     });
 
-    this.ref = base.syncState('react-events-b1478/registeredEvents', {
+    this.RegisteredEventsRef= base.syncState('react-events-b1478/registeredEvents', {
       context: this,
       state: 'registeredEvents',
       asArray: true
@@ -41,6 +41,11 @@ class App extends React.Component {
     this.setState({
       events: events
     })
+  }
+
+  componentWillUnmount = () => {
+    base.removeBinding(this.EventRef);
+    base.removeBinding(this.RegisteredEventsRef);
   }
 
   addEvent = (event) => {
