@@ -25,6 +25,24 @@ class App extends React.Component {
     });
   }
 
+  componentDidUpdate = () => {
+    const events = this.state.events.slice();
+
+    // compare id of items in both arrays
+    events.forEach(event => {
+      event.available = true;
+      this.state.registeredEvents.forEach(registeredEvent => {
+        if (event.id === registeredEvent.id) {
+          event.available = false;
+        }
+      })
+    })
+
+    this.setState({
+      events: events
+    })
+  }
+
   addEvent = (event) => {
     const events = this.state.events.slice();
     events.push(event);
@@ -53,7 +71,6 @@ class App extends React.Component {
 
     const registeredEvents = this.state.events.filter((event) => {
       if (event.id === eventID) {
-        event.available = false;
         return event;
       }
       return false;
@@ -69,7 +86,6 @@ class App extends React.Component {
     const eventID = parseInt(e.currentTarget.id);
     const registeredEvents = this.state.registeredEvents.filter((event) => {
       if (event.id === eventID) {
-        event.available = true;
         return false;
       } else {
         return event;
