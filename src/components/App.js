@@ -12,9 +12,15 @@ class App extends React.Component {
   }
 
   componentDidMount = () => {
-    this.ref = base.syncState('react-events-b1478', {
+    this.ref = base.syncState('react-events-b1478/events', {
       context: this,
       state: 'events',
+      asArray: true
+    });
+
+    this.ref = base.syncState('react-events-b1478/registeredEvents', {
+      context: this,
+      state: 'registeredEvents',
       asArray: true
     });
   }
