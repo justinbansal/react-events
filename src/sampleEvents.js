@@ -5,7 +5,9 @@ const events = [
     date: '12/31/2020',
     time: '6-8pm',
     cost: '1500',
-    image: '/images/stephen-baker-QAX5Ylx-lKo-unsplash.jpg'
+    image: '/images/stephen-baker-QAX5Ylx-lKo-unsplash.jpg',
+    available: true,
+    id: 1
   },
   {
     name: 'Scribble',
@@ -13,7 +15,9 @@ const events = [
     date: '11/01/2020',
     time: '2pm',
     cost: '0',
-    image: '/images/sam-haddad-StgZKNLVeJg-unsplash.jpg'
+    image: '/images/sam-haddad-StgZKNLVeJg-unsplash.jpg',
+    available: true,
+    id: 2
   },
   {
     name: 'Catan',
@@ -21,7 +25,9 @@ const events = [
     date: '10/29/2020',
     time: '8pm',
     cost: '0',
-    image: '/images/lea-bohm-4yI0Kg8MV_4-unsplash.jpg'
+    image: '/images/lea-bohm-4yI0Kg8MV_4-unsplash.jpg',
+    available: true,
+    id: 3
   },
   {
     name: 'Siege Night',
@@ -29,7 +35,9 @@ const events = [
     date: '10/19/2020',
     time: '9pm',
     cost: '0',
-    image: '/images/florian-olivo-Mf23RF8xArY-unsplash.jpg'
+    image: '/images/florian-olivo-Mf23RF8xArY-unsplash.jpg',
+    available: true,
+    id: 4
   },
   {
     name: 'Basketball',
@@ -37,7 +45,9 @@ const events = [
     date: '01/22/2020',
     time: '6-8pm',
     cost: '1500',
-    image: '/images/nick-jio-57rD2oDZquc-unsplash.jpg'
+    image: '/images/nick-jio-57rD2oDZquc-unsplash.jpg',
+    available: true,
+    id: 5
   }
 ]
 

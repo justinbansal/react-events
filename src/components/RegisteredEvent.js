@@ -11,6 +11,7 @@ class RegisteredEvent extends React.Component {
         <p>{time}</p>
         <div className="wrapper">
           <span className="cost">{this.props.formatMoney(cost)}</span>
+          <button className="button__remove" onClick={() => this.props.removeEvent(this.props.index)}>&times;</button>
         </div>
       </li>
     )

@@ -37,12 +37,31 @@ class App extends React.Component {
     return dollars;
   }
 
-  eventRSVP = (id) => {
-    const registeredEvent = this.state.events[id];
+  // can't update using index because arrays are differnet
+
+  eventRSVP = (index) => {
+    const registeredEvent = this.state.events[index];
+    registeredEvent.available = false;
     const registeredEvents = this.state.registeredEvents.slice();
     registeredEvents.push(registeredEvent);
     this.setState({
       registeredEvents: registeredEvents
+    })
+  }
+
+  removeEvent = (index) => {
+    const registeredEvents = this.state.registeredEvents.slice();
+    registeredEvents.splice(index, 1);
+    this.setState({
+      registeredEvents: registeredEvents
+    })
+
+    // Update status of event
+    const events = this.state.events.slice();
+    const eventToUpdate = events[index];
+    eventToUpdate.available = true;
+    this.setState({
+      events: events
     })
   }
 
@@ -72,6 +91,7 @@ class App extends React.Component {
                 index={index}
                 details={this.state.registeredEvents[index]}
                 formatMoney={this.formatMoney}
+                removeEvent={this.removeEvent}
               />
             ))}
           </ul>
