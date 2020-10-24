@@ -2,16 +2,21 @@ import React from 'react';
 import Event from './Event';
 import EventBuilder from './EventBuilder';
 import RegisteredEvent from './RegisteredEvent';
+import Login from './Login';
 import sampleEvents from '../sampleEvents';
-import base from '../base';
+import firebase from 'firebase';
+import base, { firebaseApp } from '../base';
 
 class App extends React.Component {
   state = {
     events: [],
     registeredEvents: [],
+    uid: null
   }
 
   componentDidMount = () => {
+    console.log('MOUNTED');
+
     this.EventRef = base.syncState('react-events-b1478/events', {
       context: this,
       state: 'events',
@@ -23,6 +28,13 @@ class App extends React.Component {
       state: 'registeredEvents',
       asArray: true
     });
+
+    // firebase.auth().onAuthStateChanged(user => {
+    //   if (user) {
+    //     console.log(user);
+    //     this.authHandler({ user });
+    //   }
+    // })
   }
 
   componentDidUpdate = () => {
@@ -101,7 +113,37 @@ class App extends React.Component {
     })
   }
 
+  authHandler = (authData) => {
+    // Look up the current event in the firebase database
+    // Claim it if there is no owner
+    // Set the state to reflect the current user
+    console.log(authData);
+
+    this.setState({
+      uid: authData.user.uid
+    })
+  }
+
+  authenticate = (provider) => {
+    const authProvider = new firebase.auth[`${provider}AuthProvider`]();
+    firebaseApp.auth().signInWithPopup(authProvider).then(this.authHandler);
+  }
+
+  logout = async () => {
+    await firebase.auth().signOut();
+    this.setState({
+      uid: null
+    })
+  }
+
   render() {
+    const logout = <button onClick={this.logout}>Logout!</button>
+
+    // Check if they are logged in
+    if (!this.state.uid) {
+      return <Login authenticate={this.authenticate}/>
+    }
+
     return (
       <div className="react-events">
         <div className="events-list">
@@ -119,7 +161,7 @@ class App extends React.Component {
           </ul>
         </div>
         <div className="event-details">
-          <h2>Registered Events</h2>
+          <h2>My Events</h2>
           <ul className="registered-events">
             {this.state.registeredEvents.map((element, index) => (
               <RegisteredEvent
@@ -134,8 +176,9 @@ class App extends React.Component {
         </div>
         <div className="add-events">
           <h2>Add Event</h2>
-          <EventBuilder addEvent={this.addEvent} numberOfEvents={this.state.events.length}/>
+          <EventBuilder addEvent={this.addEvent} numberOfEvents={this.state.events.length} owner={this.state.uid}/>
           <button onClick={this.loadSampleEvents}>Load Sample Events</button>
+          {logout}
         </div>
       </div>
     )

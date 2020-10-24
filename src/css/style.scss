@@ -101,3 +101,22 @@ ul {
   justify-content: flex-start;
   align-items: center;
 }
+
+// Login buttons
+.login-button {
+  display: block;
+  border: 0;
+  padding: 20px;
+  width: 300px;
+  color: #FFFFFF;
+  margin: 20px 0;
+}
+
+.facebook {
+  background-color: #01579B;
+}
+
+.google {
+  background-color: #DD2C00;
+}
+
