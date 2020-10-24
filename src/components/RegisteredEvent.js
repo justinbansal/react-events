@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Event extends React.Component {
+class RegisteredEvent extends React.Component {
   render() {
     const {name, location, date, time, cost} = this.props.details;
     return (
@@ -11,11 +11,10 @@ class Event extends React.Component {
         <p>{time}</p>
         <div className="wrapper">
           <span className="cost">{this.props.formatMoney(cost)}</span>
-          <button className="button__rsvp" onClick={() => this.props.eventRSVP(this.props.index)}>RSVP</button>
         </div>
       </li>
     )
   }
 }
 
-export default Event;
+export default RegisteredEvent;
