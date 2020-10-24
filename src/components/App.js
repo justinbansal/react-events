@@ -3,11 +3,20 @@ import Event from './Event';
 import EventBuilder from './EventBuilder';
 import RegisteredEvent from './RegisteredEvent';
 import sampleEvents from '../sampleEvents';
+import base from '../base';
 
 class App extends React.Component {
   state = {
     events: [],
     registeredEvents: [],
+  }
+
+  componentDidMount = () => {
+    this.ref = base.syncState('react-events-b1478', {
+      context: this,
+      state: 'events',
+      asArray: true
+    });
   }
 
   addEvent = (event) => {
@@ -16,10 +25,6 @@ class App extends React.Component {
     this.setState({
       events: events
     })
-  }
-
-  componentDidMount = () => {
-    this.loadSampleEvents();
   }
 
   loadSampleEvents = () => {
@@ -103,8 +108,8 @@ class App extends React.Component {
         <div className="add-events">
           <h2>Add Event</h2>
           <EventBuilder addEvent={this.addEvent} numberOfEvents={this.state.events.length}/>
+          <button onClick={this.loadSampleEvents}>Load Sample Events</button>
         </div>
-
       </div>
     )
   }
