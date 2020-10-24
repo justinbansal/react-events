@@ -14,7 +14,9 @@ class EventBuilder extends React.Component {
       location: this.locationRef.current.value,
       date: this.dateRef.current.value,
       time: this.timeRef.current.value,
-      cost: this.costRef.current.value
+      cost: this.costRef.current.value,
+      available: true,
+      id: this.props.numberOfEvents + 1
     }
     this.props.addEvent(event);
   }

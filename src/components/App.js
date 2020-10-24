@@ -37,31 +37,35 @@ class App extends React.Component {
     return dollars;
   }
 
-  // can't update using index because arrays are differnet
+  eventRSVP = (e) => {
+    const eventID = parseInt(e.currentTarget.id);
 
-  eventRSVP = (index) => {
-    const registeredEvent = this.state.events[index];
-    registeredEvent.available = false;
-    const registeredEvents = this.state.registeredEvents.slice();
-    registeredEvents.push(registeredEvent);
+    const registeredEvents = this.state.events.filter((event) => {
+      if (event.id === eventID) {
+        event.available = false;
+        return event;
+      }
+      return false;
+    });
+
+    const updatedEvents = this.state.registeredEvents.concat(registeredEvents);
     this.setState({
-      registeredEvents: registeredEvents
+      registeredEvents: updatedEvents
     })
   }
 
-  removeEvent = (index) => {
-    const registeredEvents = this.state.registeredEvents.slice();
-    registeredEvents.splice(index, 1);
+  removeEvent = (e) => {
+    const eventID = parseInt(e.currentTarget.id);
+    const registeredEvents = this.state.registeredEvents.filter((event) => {
+      if (event.id === eventID) {
+        event.available = true;
+        return false;
+      } else {
+        return event;
+      }
+    })
     this.setState({
       registeredEvents: registeredEvents
-    })
-
-    // Update status of event
-    const events = this.state.events.slice();
-    const eventToUpdate = events[index];
-    eventToUpdate.available = true;
-    this.setState({
-      events: events
     })
   }
 
@@ -98,7 +102,7 @@ class App extends React.Component {
         </div>
         <div className="add-events">
           <h2>Add Event</h2>
-          <EventBuilder addEvent={this.addEvent}/>
+          <EventBuilder addEvent={this.addEvent} numberOfEvents={this.state.events.length}/>
         </div>
 
       </div>

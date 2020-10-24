@@ -2,7 +2,7 @@ import React from 'react';
 
 class Event extends React.Component {
   render() {
-    const {name, location, date, time, cost, available} = this.props.details;
+    const {name, location, date, time, cost, available, id} = this.props.details;
     return (
       <li className="event-list--event">
         <h3 className="event-name">{name}</h3>
@@ -11,7 +11,7 @@ class Event extends React.Component {
         <p>{time}</p>
         <div className="wrapper">
           <span className="cost">{this.props.formatMoney(cost)}</span>
-          <button disabled={!available ? true : false} className="button__rsvp" onClick={() => this.props.eventRSVP(this.props.index)}>RSVP</button>
+          <button id={id} disabled={!available ? true : false} className="button__rsvp" onClick={this.props.eventRSVP}>RSVP</button>
         </div>
       </li>
     )
