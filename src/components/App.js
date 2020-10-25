@@ -11,7 +11,8 @@ class App extends React.Component {
   state = {
     events: [],
     registeredEvents: [],
-    uid: null
+    uid: null,
+    users: {}
   }
 
   componentDidMount = () => {
@@ -23,41 +24,42 @@ class App extends React.Component {
       asArray: true
     });
 
-    this.RegisteredEventsRef= base.syncState('react-events-b1478/registeredEvents', {
+    this.UsersRef= base.syncState('react-events-b1478/users', {
       context: this,
-      state: 'registeredEvents',
-      asArray: true
+      state: 'users'
     });
 
-    // firebase.auth().onAuthStateChanged(user => {
-    //   if (user) {
-    //     console.log(user);
-    //     this.authHandler({ user });
-    //   }
-    // })
-  }
-
-  componentDidUpdate = () => {
-    const events = this.state.events.slice();
-
-    // compare id of items in both arrays
-    events.forEach(event => {
-      event.available = true;
-      this.state.registeredEvents.forEach(registeredEvent => {
-        if (event.id === registeredEvent.id) {
-          event.available = false;
-        }
-      })
-    })
-
-    this.setState({
-      events: events
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.authHandler({ user });
+      }
     })
   }
+
+  // componentDidUpdate = () => {
+  //   console.log('UPDATED!')
+  //   const events = this.state.events.slice();
+
+  //   // compare id of items in both arrays
+  //   events.forEach(event => {
+  //     event.available = true;
+  //     this.state.registeredEvents.forEach(registeredEvent => {
+  //       if (event.id === registeredEvent.id) {
+  //         event.available = false;
+  //       }
+  //     })
+  //   })
+
+  //   console.log(events);
+
+  //   this.setState({
+  //     events: events
+  //   })
+  // }
 
   componentWillUnmount = () => {
     base.removeBinding(this.EventRef);
-    base.removeBinding(this.RegisteredEventsRef);
+    base.removeBinding(this.UsersRef);
   }
 
   addEvent = (event) => {
@@ -66,6 +68,14 @@ class App extends React.Component {
     this.setState({
       events: events
     })
+
+    // Update users object
+    // Find user
+    // Push event object to created events array
+
+    const users = {...this.state.users};
+    users[this.state.uid].created.push(event);
+    console.log(users);
   }
 
   loadSampleEvents = () => {
@@ -86,16 +96,18 @@ class App extends React.Component {
   eventRSVP = (e) => {
     const eventID = parseInt(e.currentTarget.id);
 
-    const registeredEvents = this.state.events.filter((event) => {
-      if (event.id === eventID) {
-        return event;
-      }
-      return false;
+    // Copy users
+    const users = {...this.state.users};
+
+    // Have to find the event with the matching ID
+
+    const matchingEvents = this.state.events.filter(event => {
+      return event.id === eventID
     });
 
-    const updatedEvents = this.state.registeredEvents.concat(registeredEvents);
+    users[this.state.uid].registered.push(matchingEvents[0])
     this.setState({
-      registeredEvents: updatedEvents
+      users: users
     })
   }
 
@@ -114,12 +126,27 @@ class App extends React.Component {
   }
 
   authHandler = (authData) => {
-    // Look up the current event in the firebase database
-    // Claim it if there is no owner
-    // Set the state to reflect the current user
-    console.log(authData);
+
+    // Look up current user
+    // const users = await base.fetch(`react-events-b1478/users/${authData.user.uid}`, { context: this}) // returns promise
+    // console.log(users);
+
+    // if (!users[this.state.uid]) {
+    //   // Save it
+    //   await base.post('react-events-b1478/users/user', {
+    //     data: authData.user.uid
+    //   })
+    // }
+    const users = {};
+    users[authData.user.uid] = {
+      created: [],
+      registered: []
+    }
+
+    console.log(users);
 
     this.setState({
+      users: users,
       uid: authData.user.uid
     })
   }
@@ -131,15 +158,18 @@ class App extends React.Component {
 
   logout = async () => {
     await firebase.auth().signOut();
+
     this.setState({
-      uid: null
+      uid: null,
     })
   }
 
   render() {
     const logout = <button onClick={this.logout}>Logout!</button>
 
-    // Check if they are logged in
+    console.log(this.state.users[this.state.uid]);
+
+    // Check if they are logged in and if the user has been added
     if (!this.state.uid) {
       return <Login authenticate={this.authenticate}/>
     }
@@ -163,11 +193,11 @@ class App extends React.Component {
         <div className="event-details">
           <h2>My Events</h2>
           <ul className="registered-events">
-            {this.state.registeredEvents.map((element, index) => (
+            {this.state.users[this.state.uid].registered.map((element, index) => (
               <RegisteredEvent
                 key={index}
                 index={index}
-                details={this.state.registeredEvents[index]}
+                details={this.state.users[this.state.uid].registered[index]}
                 formatMoney={this.formatMoney}
                 removeEvent={this.removeEvent}
               />
