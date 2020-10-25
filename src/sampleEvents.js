@@ -7,7 +7,11 @@ const events = [
     cost: '1500',
     image: '/images/stephen-baker-QAX5Ylx-lKo-unsplash.jpg',
     available: true,
-    id: 1
+    id: 1,
+    owner: 'Justin',
+    guests: [
+      'Sanjit', 'Varun', 'Rachit', 'Rachin', 'Dhanesh', 'Hai'
+    ]
   },
   {
     name: 'Scribble',

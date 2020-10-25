@@ -4,22 +4,37 @@ import EventBuilder from './EventBuilder';
 import RegisteredEvent from './RegisteredEvent';
 import Login from './Login';
 import sampleEvents from '../sampleEvents';
+import sampleUsers from '../sampleUsers';
 
 class App extends React.Component {
   state = {
     events: [],
     registeredEvents: [],
-    uid: null,
+    currentUser: null,
     users: {}
   }
 
   componentDidMount = () => {
     console.log('MOUNTED');
+    const localStorageRef = localStorage.getItem('events');
+    if (localStorageRef) {
+      this.setState({
+        events: JSON.parse(localStorageRef)
+      })
+    }
+
+    // Check database to see if we have a currentUser defined
+    const currentUserRef = localStorage.getItem('currentUser');
+    if (currentUserRef) {
+      this.setState({
+        currentUser: currentUserRef
+      })
+    }
   }
 
   componentDidUpdate = () => {
     console.log('UPDATED!')
-
+    localStorage.setItem('events', JSON.stringify(this.state.events));
   }
 
   componentWillUnmount = () => {
@@ -37,9 +52,10 @@ class App extends React.Component {
     users[this.state.uid].created.push(event);
   }
 
-  loadSampleEvents = () => {
+  loadSampleData = () => {
     this.setState({
-      events: sampleEvents
+      events: sampleEvents,
+      users: sampleUsers
     })
   }
 
@@ -84,9 +100,35 @@ class App extends React.Component {
     })
   }
 
+  login = () => {
+    // Check database to see if we have a currentUser defined
+    const localStorageRef = localStorage.getItem('currentUser');
+    if (localStorageRef) {
+      this.setState({
+        currentUser: localStorageRef
+      })
+    } else {
+      const currentUser = `User${Date.now()}`
+      localStorage.setItem('currentUser', currentUser);
+      this.setState({
+        currentUser: currentUser
+      })
+    }
+  }
+
+  logout = () => {
+    this.setState({
+      currentUser: null
+    })
+    localStorage.removeItem('currentUser');
+  }
 
   render() {
-    const logout = <button onClick={this.logout}>Logout!</button>
+    const logout = <button className="logout-button" onClick={this.logout}>Logout!</button>
+
+    if (!this.state.currentUser) {
+      return <Login login={this.login}/>
+    }
 
     return (
       <div className="react-events">
@@ -121,7 +163,7 @@ class App extends React.Component {
         <div className="add-events">
           <h2>Add Event</h2>
           <EventBuilder addEvent={this.addEvent} numberOfEvents={this.state.events.length} owner={this.state.uid}/>
-          <button onClick={this.loadSampleEvents}>Load Sample Events</button>
+          <button onClick={this.loadSampleData}>Load Sample Data</button>
           {logout}
         </div>
       </div>

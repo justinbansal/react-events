@@ -19,6 +19,7 @@ body {
   padding: 20px;
   display: flex;
   flex-wrap: wrap;
+  position: relative;
 }
 
 
@@ -110,13 +111,20 @@ ul {
   width: 300px;
   color: #FFFFFF;
   margin: 20px 0;
-}
-
-.facebook {
   background-color: #01579B;
 }
 
-.google {
+.logout-button {
+  display: block;
+  border: 0;
+  padding: 20px;
+  width: 100px;
+  color: #FFFFFF;
+  margin: 20px 0;
   background-color: #DD2C00;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
+
 
