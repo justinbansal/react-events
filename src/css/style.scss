@@ -107,7 +107,7 @@ ul {
 .login-button {
   display: block;
   border: 0;
-  padding: 20px;
+  padding: 10px;
   width: 300px;
   color: #FFFFFF;
   margin: 20px 0;
@@ -127,4 +127,7 @@ ul {
   right: 0;
 }
 
-
+.login-form input {
+  padding: 10px;
+  width: 300px;
+}

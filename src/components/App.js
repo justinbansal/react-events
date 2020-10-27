@@ -1,7 +1,7 @@
 import React from 'react';
 import Event from './Event';
 import EventBuilder from './EventBuilder';
-import RegisteredEvent from './RegisteredEvent';
+import RegisteredEvents from './RegisteredEvents';
 import Login from './Login';
 import sampleEvents from '../sampleEvents';
 import sampleUsers from '../sampleUsers';
@@ -23,6 +23,13 @@ class App extends React.Component {
       })
     }
 
+    const usersRef = localStorage.getItem('users');
+    if (usersRef) {
+      this.setState({
+        users: JSON.parse(usersRef)
+      })
+    }
+
     // Check database to see if we have a currentUser defined
     const currentUserRef = localStorage.getItem('currentUser');
     if (currentUserRef) {
@@ -35,6 +42,7 @@ class App extends React.Component {
   componentDidUpdate = () => {
     console.log('UPDATED!')
     localStorage.setItem('events', JSON.stringify(this.state.events));
+    localStorage.setItem('users', JSON.stringify(this.state.users));
   }
 
   componentWillUnmount = () => {
@@ -100,19 +108,34 @@ class App extends React.Component {
     })
   }
 
-  login = () => {
-    // Check database to see if we have a currentUser defined
-    const localStorageRef = localStorage.getItem('currentUser');
-    if (localStorageRef) {
-      this.setState({
-        currentUser: localStorageRef
-      })
-    } else {
-      const currentUser = `User${Date.now()}`
-      localStorage.setItem('currentUser', currentUser);
-      this.setState({
-        currentUser: currentUser
-      })
+  login = (username) => {
+    console.log(username);
+
+    if (username) {
+      if (this.state.users[username]) {
+        // User exists
+        // Let them in
+        this.setState({
+          currentUser: username
+        })
+
+        localStorage.setItem('currentUser', username);
+      } else {
+        // create new user
+        const users = {...this.state.users};
+        users[username] = {
+          isAdmin: false,
+          registered: [],
+          created: []
+        }
+
+        this.setState({
+          users: users,
+          currentUser: username
+        })
+
+        localStorage.setItem('currentUser', username);
+      }
     }
   }
 
@@ -125,6 +148,15 @@ class App extends React.Component {
 
   render() {
     const logout = <button className="logout-button" onClick={this.logout}>Logout!</button>
+
+    // If this person has registered events let's display them
+    let showEvents;
+    if (this.state.users[this.state.currentUser] && this.state.users[this.state.currentUser].registered.length > 0) {
+      showEvents = <RegisteredEvents
+      registeredEvents={this.state.users[this.state.currentUser].registered} formatMoney={this.formatMoney}
+      removeEvent={this.removeEvent}
+      />;
+    }
 
     if (!this.state.currentUser) {
       return <Login login={this.login}/>
@@ -146,20 +178,7 @@ class App extends React.Component {
             ))}
           </ul>
         </div>
-        <div className="event-details">
-          <h2>My Events</h2>
-          <ul className="registered-events">
-            {this.state.registeredEvents.map((element, index) => (
-              <RegisteredEvent
-                key={index}
-                index={index}
-                details={this.state.registeredEvents[index]}
-                formatMoney={this.formatMoney}
-                removeEvent={this.removeEvent}
-              />
-            ))}
-          </ul>
-        </div>
+        {showEvents}
         <div className="add-events">
           <h2>Add Event</h2>
           <EventBuilder addEvent={this.addEvent} numberOfEvents={this.state.events.length} owner={this.state.uid}/>
