@@ -102,15 +102,19 @@ class App extends React.Component {
 
   removeEvent = (e) => {
     const eventID = parseInt(e.currentTarget.id);
-    const registeredEvents = this.state.registeredEvents.filter((event) => {
+    const registeredEvents = this.state.users[this.state.currentUser].registered.filter((event) => {
       if (event.id === eventID) {
         return false;
       } else {
         return event;
       }
     })
+
+    const users = {...this.state.users};
+    users[this.state.currentUser].registered = registeredEvents;
+
     this.setState({
-      registeredEvents: registeredEvents
+      users : users
     })
   }
 
@@ -173,7 +177,7 @@ class App extends React.Component {
         <div className="events-list">
           <h2>Available Events</h2>
           <ul className="events">
-            {this.state.events.map((element, index) => (
+            {this.state.events.length > 0 && this.state.events.map((element, index) => (
               <Event
                 key={index}
                 index={index}
