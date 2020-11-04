@@ -21,7 +21,8 @@ const events = [
     cost: '0',
     image: '/images/sam-haddad-StgZKNLVeJg-unsplash.jpg',
     available: true,
-    id: 2
+    id: 2,
+    guests: []
   },
   {
     name: 'Catan',
@@ -31,7 +32,8 @@ const events = [
     cost: '0',
     image: '/images/lea-bohm-4yI0Kg8MV_4-unsplash.jpg',
     available: true,
-    id: 3
+    id: 3,
+    guests: []
   },
   {
     name: 'Siege Night',
@@ -41,7 +43,8 @@ const events = [
     cost: '0',
     image: '/images/florian-olivo-Mf23RF8xArY-unsplash.jpg',
     available: true,
-    id: 4
+    id: 4,
+    guests: []
   },
   {
     name: 'Basketball',
@@ -51,7 +54,8 @@ const events = [
     cost: '1500',
     image: '/images/nick-jio-57rD2oDZquc-unsplash.jpg',
     available: true,
-    id: 5
+    id: 5,
+    guests: []
   }
 ]
 

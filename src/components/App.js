@@ -57,7 +57,7 @@ class App extends React.Component {
     })
 
     const users = {...this.state.users};
-    users[this.state.uid].created.push(event);
+    users[this.state.currentUser].created.push(event);
   }
 
   loadSampleData = () => {
@@ -88,10 +88,16 @@ class App extends React.Component {
       return event.id === eventID
     });
 
-    users[this.state.uid].registered.push(matchingEvents[0])
+    let matchingEvent = matchingEvents[0];
+
+    // Add guests
+    matchingEvent.guests.push(this.state.currentUser);
+
+    users[this.state.currentUser].registered.push(matchingEvent);
     this.setState({
       users: users
     })
+
   }
 
   removeEvent = (e) => {
@@ -174,6 +180,7 @@ class App extends React.Component {
                 details={this.state.events[index]}
                 formatMoney={this.formatMoney}
                 eventRSVP={this.eventRSVP}
+                currentUser={this.state.currentUser}
               />
             ))}
           </ul>
@@ -181,7 +188,7 @@ class App extends React.Component {
         {showEvents}
         <div className="add-events">
           <h2>Add Event</h2>
-          <EventBuilder addEvent={this.addEvent} numberOfEvents={this.state.events.length} owner={this.state.uid}/>
+          <EventBuilder addEvent={this.addEvent} numberOfEvents={this.state.events.length} owner={this.state.currentUser}/>
           <button onClick={this.loadSampleData}>Load Sample Data</button>
           {logout}
         </div>
