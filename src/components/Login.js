@@ -10,17 +10,20 @@ class Login extends React.Component  {
 
   render() {
     return (
-      <nav className="login">
-        <h2>Login</h2>
-        <p>Sign in to manage your events</p>
-        <form className="login-form" onSubmit={this.onSubmit}>
-          <input type="text" name="username" placeholder="Username" ref={this.usernameRef} required/>
-          <button type="submit"className="login-button">
-            Login
-          </button>
-        </form>
-
-      </nav>
+      <div className="container login">
+        <div className="row">
+          <div className="col">
+            <h2>Login to React Events</h2>
+            <p>Enter a username to proceed</p>
+            <form className="login-form" onSubmit={this.onSubmit}>
+              <input type="text" name="username" placeholder="Username" ref={this.usernameRef} required/>
+              <button type="submit" className="login-button">
+                Login
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     )
   }
 }

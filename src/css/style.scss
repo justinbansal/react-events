@@ -1,3 +1,8 @@
+body,
+html {
+  height: 100%;
+}
+
 html {
   box-sizing: border-box;
 }
@@ -110,7 +115,7 @@ ul {
   padding: 10px;
   width: 300px;
   color: #FFFFFF;
-  margin: 20px 0;
+  margin: 20px auto;
   background-color: #01579B;
 }
 
@@ -130,4 +135,14 @@ ul {
 .login-form input {
   padding: 10px;
   width: 300px;
+}
+
+// Login page
+.login {
+  text-align: center;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
