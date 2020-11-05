@@ -26,11 +26,11 @@ class EventBuilder extends React.Component {
   render() {
     return (
       <form className="event-builder" onSubmit={this.onSubmit}>
-        <input type="text" name="name" placeholder="name" ref={this.nameRef}/>
-        <input type="text" name="location" placeholder="location" ref={this.locationRef}/>
-        <input type="text" name="date" placeholder="date" ref={this.dateRef}/>
-        <input type="text" name="time" placeholder="time" ref={this.timeRef}/>
-        <input type="text" name="cost" placeholder="cost" ref={this.costRef}/>
+        <input type="text" name="name" placeholder="name" ref={this.nameRef} required/>
+        <input type="text" name="location" placeholder="location" ref={this.locationRef} required/>
+        <input type="date" name="date" placeholder="date" ref={this.dateRef} required/>
+        <input type="time" name="time" placeholder="time" ref={this.timeRef} required/>
+        <input type="number" name="cost" placeholder="cost" ref={this.costRef} required/>
         <button type="submit">Create Event</button>
       </form>
     )

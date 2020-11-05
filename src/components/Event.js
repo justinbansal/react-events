@@ -27,7 +27,7 @@ class Event extends React.Component {
           ))}
         </ul>
         <div className="wrapper">
-          <span className="cost">{this.props.formatMoney(cost)}</span>
+          <span className="cost">${this.props.formatMoney(cost)}</span>
           <button id={id} disabled={!showRSVPButton ? true : false} className="button__rsvp" onClick={this.props.eventRSVP}>RSVP</button>
         </div>
       </li>

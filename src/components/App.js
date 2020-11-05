@@ -67,9 +67,8 @@ class App extends React.Component {
     })
   }
 
-  formatMoney = (cents) => {
-    let dollars = cents / 100;
-    dollars = dollars.toLocaleString('en-us', {
+  formatMoney = (amount) => {
+    let dollars = amount.toLocaleString('en-us', {
       style: 'currency',
       currency: 'CAD'
     })
