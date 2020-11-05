@@ -154,7 +154,6 @@ class App extends React.Component {
   }
 
   login = (username) => {
-    console.log(username);
 
     if (username) {
       if (this.state.users[username]) {

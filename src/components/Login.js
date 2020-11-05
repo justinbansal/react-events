@@ -14,7 +14,7 @@ class Login extends React.Component  {
         <h2>Login</h2>
         <p>Sign in to manage your events</p>
         <form className="login-form" onSubmit={this.onSubmit}>
-          <input type="text" name="username" placeholder="Username" ref={this.usernameRef}/>
+          <input type="text" name="username" placeholder="Username" ref={this.usernameRef} required/>
           <button type="submit"className="login-button">
             Login
           </button>
