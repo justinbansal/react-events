@@ -17,7 +17,8 @@ class EventBuilder extends React.Component {
       cost: this.costRef.current.value,
       available: true,
       id: this.props.numberOfEvents + 1,
-      owner: this.props.owner
+      owner: this.props.owner,
+      guests: []
     }
     this.props.addEvent(event);
   }
