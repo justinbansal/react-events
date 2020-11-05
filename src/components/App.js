@@ -101,7 +101,11 @@ class App extends React.Component {
   }
 
   removeEvent = (e) => {
+
+    // Grabs event ID of the one we are removing
     const eventID = parseInt(e.currentTarget.id);
+
+    // Filters into array of events that don't match the one being removed
     const registeredEvents = this.state.users[this.state.currentUser].registered.filter((event) => {
       if (event.id === eventID) {
         return false;
@@ -110,11 +114,43 @@ class App extends React.Component {
       }
     })
 
+    let updatedGuests;
+    const currentUser = this.state.currentUser;
+
+    // Remove currentUser from guests of the deleted event as well
+    const availableEvents = this.state.events.filter((event) => {
+      if (event.id === eventID) {
+        // Event matches
+        updatedGuests = event.guests.filter(guest => {
+          if (guest === currentUser) {
+            return false;
+          } else {
+            return true;
+          }
+        })
+      }
+    })
+
+    // Copies user object
     const users = {...this.state.users};
+    // Update registered array with new array
     users[this.state.currentUser].registered = registeredEvents;
 
+    // Copy events object
+    const events = this.state.events.slice();
+
+    // Update guests for the event with that ID
+    const updatedEvents = events.map(function(event) {
+      if (event.id === eventID) {
+        event.guests = updatedGuests;
+      }
+      return event;
+    })
+
+    // Update state with new user object
     this.setState({
-      users : users
+      users : users,
+      events: updatedEvents
     })
   }
 
