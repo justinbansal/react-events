@@ -154,6 +154,7 @@ class App extends React.Component {
   }
 
   login = (username) => {
+    console.log(username);
 
     if (username) {
       if (this.state.users[username]) {
@@ -164,6 +165,8 @@ class App extends React.Component {
         })
 
         localStorage.setItem('currentUser', username);
+
+        this.props.history.push(`/users/${username}`);
       } else {
         // create new user
         const users = {...this.state.users};

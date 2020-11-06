@@ -6,6 +6,7 @@ class Login extends React.Component  {
   onSubmit = (e) => {
     e.preventDefault();
     this.props.login(this.usernameRef.current.value)
+    //this.props.history.push(`/users/${this.usernameRef.current.value}`);
   }
 
   render() {
