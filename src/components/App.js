@@ -166,7 +166,6 @@ class App extends React.Component {
 
         localStorage.setItem('currentUser', username);
 
-        this.props.history.push(`/users/${username}`);
       } else {
         // create new user
         const users = {...this.state.users};
