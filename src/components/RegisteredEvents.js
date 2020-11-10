@@ -5,7 +5,6 @@ class RegisteredEvents extends React.Component {
   render() {
     return (
       <div className="event-details">
-        <h2>My Events</h2>
         <ul className="registered-events">
           {this.props.registeredEvents.map((element, index) => (
             <RegisteredEvent

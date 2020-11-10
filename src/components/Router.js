@@ -8,7 +8,6 @@ const Router = () => (
   <BrowserRouter>
     <Switch>
       <Route exact path="/" component={App} />
-      <Route path="/users/:userId" component={User} />
     </Switch>
   </BrowserRouter>
 )

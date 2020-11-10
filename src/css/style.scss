@@ -27,7 +27,6 @@ body {
   position: relative;
 }
 
-
 .event-builder {
 
   input {
@@ -92,22 +91,6 @@ ul {
   width: 100%;
 }
 
-.add-events {
-  display: flex;
-  justify-content: center;
-}
-
-.events-list,
-.add-events,
-.event-details {
-  flex: 1;
-  margin: 0 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-
 // Login buttons
 .login-button {
   display: block;
@@ -122,14 +105,15 @@ ul {
 .logout-button {
   display: block;
   border: 0;
-  padding: 20px;
+  padding: 5px;
   width: 100px;
   color: #FFFFFF;
-  margin: 20px 0;
   background-color: #DD2C00;
-  position: absolute;
-  top: 0;
-  right: 0;
+  margin-left: auto;
+}
+
+.col--welcome {
+  display: flex;
 }
 
 .login-form input {
@@ -148,6 +132,7 @@ ul {
 
 .container {
   height: 100vh;
+  margin-top: 20px;
 }
 
 .user {

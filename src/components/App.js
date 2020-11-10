@@ -210,28 +210,40 @@ class App extends React.Component {
     }
 
     return (
-      <div className="react-events">
-        <div className="events-list">
-          <h2>Available Events</h2>
-          <ul className="events">
-            {this.state.events.length > 0 && this.state.events.map((element, index) => (
-              <Event
-                key={index}
-                index={index}
-                details={this.state.events[index]}
-                formatMoney={this.formatMoney}
-                eventRSVP={this.eventRSVP}
-                currentUser={this.state.currentUser}
-              />
-            ))}
-          </ul>
+      <div className="container">
+        <div className="row">
+          <div className="col col--welcome">
+            <p>Welcome {this.state.currentUser} :)</p>
+            {logout}
+          </div>
         </div>
-        {showEvents}
-        <div className="add-events">
-          <h2>Add Event</h2>
-          <EventBuilder addEvent={this.addEvent} numberOfEvents={this.state.events.length} owner={this.state.currentUser}/>
-          <button onClick={this.loadSampleData}>Load Sample Data</button>
-          {logout}
+        <div className="row">
+          <div className="col">
+            <h3>My Events</h3>
+            <ul className="events">
+              {this.state.events.length > 0 && this.state.events.map((element, index) => (
+                <Event
+                  key={index}
+                  index={index}
+                  details={this.state.events[index]}
+                  formatMoney={this.formatMoney}
+                  eventRSVP={this.eventRSVP}
+                  currentUser={this.state.currentUser}
+                />
+              ))}
+            </ul>
+            </div>
+          <div className="col">
+            <h3>Events Feed</h3>
+            {showEvents}
+          </div>
+          <div className="col">
+            <h3>Create Event</h3>
+            <div className="add-events">
+              <EventBuilder addEvent={this.addEvent} numberOfEvents={this.state.events.length} owner={this.state.currentUser}/>
+              <button onClick={this.loadSampleData}>Load Sample Data</button>
+            </div>
+          </div>
         </div>
       </div>
     )
