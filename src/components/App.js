@@ -76,26 +76,34 @@ class App extends React.Component {
   }
 
   eventRSVP = (e) => {
+
+    // Variables
     const eventID = parseInt(e.currentTarget.id);
+    const currentUser = this.state.currentUser;
 
-    // Copy users
+    let updatedEvents = this.state.events.map(event => {
+      if (event.id === eventID) {
+        event.guests.push(currentUser);
+      }
+      return event;
+    })
+
+    // For clicked RSVP event, guests array updates to include user
+    // Need to also add event to the user's registeredEvents
+
+    // At this point the user should already be in the users object (TODO: add this in the login logic)
+    // Filter all events based on currentUser and replace user's registeredEvents array with this array
+
+    let events = updatedEvents.filter(function(event) {
+      return event.guests.includes(currentUser);
+    })
+
+    // Update state
     const users = {...this.state.users};
-
-    // Have to find the event with the matching ID
-
-    const matchingEvents = this.state.events.filter(event => {
-      return event.id === eventID
-    });
-
-    let matchingEvent = matchingEvents[0];
-
-    // Add guests
-    matchingEvent.guests.push(this.state.currentUser);
-
-    // Need to add a check here to see if this property exists (user may not necessarily be added);
-    users[this.state.currentUser].registered.push(matchingEvent);
+    users[currentUser].registered = events;
     this.setState({
-      users: users
+      users: users,
+      events: updatedEvents
     })
 
   }
@@ -116,12 +124,12 @@ class App extends React.Component {
 
     let filteredGuests;
     let filteredEvents = this.state.events.map(function(event) {
-        if (event.id === eventID) {
-          filteredGuests = event.guests.filter(function(guest) {
-            return guest !== currentUser;
-          })
-        }
-      })
+      if (event.id === eventID) {
+        filteredGuests = event.guests.filter(function(guest) {
+          return guest !== currentUser;
+        })
+      }
+    })
 
     // 3. Update state object
     const users = {...this.state.users};
