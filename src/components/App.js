@@ -92,6 +92,7 @@ class App extends React.Component {
     // Add guests
     matchingEvent.guests.push(this.state.currentUser);
 
+    // Need to add a check here to see if this property exists (user may not necessarily be added);
     users[this.state.currentUser].registered.push(matchingEvent);
     this.setState({
       users: users
@@ -101,47 +102,36 @@ class App extends React.Component {
 
   removeEvent = (e) => {
 
-    // Grabs event ID of the one we are removing
+    // Variables
+
     const eventID = parseInt(e.currentTarget.id);
-
-    // Filters into array of events that don't match the one being removed
-    const registeredEvents = this.state.users[this.state.currentUser].registered.filter((event) => {
-      if (event.id === eventID) {
-        return false;
-      } else {
-        return event;
-      }
-    })
-
-    let updatedGuests;
     const currentUser = this.state.currentUser;
 
-    // Remove currentUser from guests of the deleted event as well
-    const availableEvents = this.state.events.filter((event) => {
-      if (event.id === eventID) {
-        // Event matches
-        updatedGuests = event.guests.filter(guest => {
-          if (guest === currentUser) {
-            return false;
-          } else {
-            return true;
-          }
-        })
-      }
+    // 1. Get an array with the selected event removed
+    let registeredEvents = this.state.users[currentUser].registered.filter(function(event) {
+      return event.id !== eventID;
     })
 
-    // Copies user object
-    const users = {...this.state.users};
-    // Update registered array with new array
-    users[this.state.currentUser].registered = registeredEvents;
+    // 2. Remove currentUser from guests of the deleted event as well
 
-    // Copy events object
+    let filteredGuests;
+    let filteredEvents = this.state.events.map(function(event) {
+        if (event.id === eventID) {
+          filteredGuests = event.guests.filter(function(guest) {
+            return guest !== currentUser;
+          })
+        }
+      })
+
+    // 3. Update state object
+    const users = {...this.state.users};
+    users[currentUser].registered = registeredEvents;
     const events = this.state.events.slice();
 
-    // Update guests for the event with that ID
+    // Update guests in events array
     const updatedEvents = events.map(function(event) {
       if (event.id === eventID) {
-        event.guests = updatedGuests;
+        event.guests = filteredGuests;
       }
       return event;
     })
