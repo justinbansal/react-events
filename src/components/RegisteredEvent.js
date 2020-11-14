@@ -2,9 +2,9 @@ import React from 'react';
 
 class RegisteredEvent extends React.Component {
   render() {
-    const {name, location, date, time, cost, id} = this.props.details;
+    const {name, location, date, time, cost, image, id} = this.props.details;
     return (
-      <li className="event-list--event">
+      <li className="event-list--event" style={{backgroundImage: `url(${image})`}}>
         <h3 className="event-name">{name}</h3>
         <p>{location}</p>
         <p>{date}</p>

@@ -28,6 +28,9 @@ class Nav extends React.Component  {
             <li className="nav-item">
               <Link className="nav-link" to={userLink}>My Events</Link>
             </li>
+            <li className="nav-item nav-item--username">
+              <Link className="nav-link" to="#">{this.props.match.params.username ? this.props.match.params.username : this.props.currentUser }</Link>
+            </li>
             {logout}
           </ul>
         </div>
