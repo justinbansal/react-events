@@ -69,19 +69,16 @@ class App extends React.Component {
       currentUser: null
     })
     localStorage.removeItem('currentUser');
-
-    // @TODO: redirect to "/" homepage
-    //this.props.history.push('/');
   }
 
   render() {
     return (
       <BrowserRouter>
         <Switch>
-          <Route exact path="/" render={() => {
+          <Route exact path="/" render={(matchProps) => {
             if (this.state.currentUser) {
               return (
-                <Main logout={this.logout}/>
+                <Main logout={this.logout} {...matchProps}/>
               )
             } else {
               return (
@@ -89,16 +86,10 @@ class App extends React.Component {
               )
             }
           }} />
-          <Route exact path="/user/:username" render={() => {
-            if (this.state.currentUser) {
-              return (
-                <User currentUser={this.state.currentUser} logout={this.logout}/>
-              )
-            } else {
-              return (
-                <Login login={this.login}/>
-              )
-            }
+          <Route exact path="/user/:username" render={(matchProps) => {
+            return (
+              <User currentUser={this.state.currentUser} logout={this.logout} {...matchProps}/>
+            )
           }} />
         </Switch>
       </BrowserRouter>

@@ -3,8 +3,13 @@ import { Link } from 'react-router-dom';
 
 class Nav extends React.Component  {
 
+  handleLogout = () => {
+    this.props.logout();
+    this.props.history.push('/');
+  }
+
   render() {
-    const logout = <button className="logout-button" onClick={this.props.logout}>Logout!</button>
+    const logout = <button className="logout-button" onClick={this.handleLogout}>Logout!</button>
 
     let userLink = `user/${this.props.currentUser}`;
 

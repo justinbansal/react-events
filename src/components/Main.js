@@ -162,7 +162,7 @@ class Main extends React.Component {
       <div className="container">
         <div className="row">
           <div className="col">
-            <Nav currentUser={this.state.currentUser} logout={this.props.logout}></Nav>
+            <Nav currentUser={this.state.currentUser} logout={this.props.logout} history={this.props.history}></Nav>
           </div>
         </div>
         <div className="row">
