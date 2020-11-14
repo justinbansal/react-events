@@ -1,8 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Event from './Event';
 import EventBuilder from './EventBuilder';
 import RegisteredEvents from './RegisteredEvents';
-import Login from './Login';
 import sampleEvents from '../sampleEvents';
 import sampleUsers from '../sampleUsers';
 
@@ -170,9 +170,18 @@ class Main extends React.Component {
       />;
     }
 
+    let userLink = `user/${this.state.currentUser}`;
+
     return (
       <div className="container">
         <div className="row">
+          <div className="col">
+            <ul className="nav">
+              <li className="nav-item">
+                <Link to={userLink}>Profile</Link>
+              </li>
+            </ul>
+          </div>
           <div className="col col--welcome">
             <p>Welcome {this.state.currentUser} :)</p>
             {logout}

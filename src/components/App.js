@@ -57,7 +57,7 @@ class App extends React.Component {
           }} />
           <Route exact path="/user/:username" render={() => {
             return (
-              <User />
+              <User currentUser={this.state.currentUser}/>
             )
           }} />
         </Switch>
