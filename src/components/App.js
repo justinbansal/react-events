@@ -82,8 +82,8 @@ class App extends React.Component {
     localStorage.removeItem('currentUser');
   }
 
-  formatMoney = (amount) => {
-    let dollars = amount.toLocaleString('en-us', {
+  formatMoney = (cents) => {
+    let dollars = (cents / 100).toLocaleString('en-us', {
       style: 'currency',
       currency: 'CAD'
     })
