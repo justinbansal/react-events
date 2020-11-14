@@ -10,6 +10,30 @@ class App extends React.Component {
     users: {}
   }
 
+  componentDidMount = () => {
+    console.log('APP MOUNTED');
+
+    const usersRef = localStorage.getItem('users');
+    if (usersRef) {
+      this.setState({
+        users: JSON.parse(usersRef)
+      })
+    }
+
+    // Check database to see if we have a currentUser defined
+    const currentUserRef = localStorage.getItem('currentUser');
+    if (currentUserRef) {
+      this.setState({
+        currentUser: currentUserRef
+      })
+    }
+  }
+
+  componentDidUpdate = () => {
+    console.log('APP UPDATED!')
+    localStorage.setItem('users', JSON.stringify(this.state.users));
+  }
+
   login = (username) => {
 
     if (username) {
@@ -40,6 +64,16 @@ class App extends React.Component {
     }
   }
 
+  logout = () => {
+    this.setState({
+      currentUser: null
+    })
+    localStorage.removeItem('currentUser');
+
+    // @TODO: redirect to "/" homepage
+    //this.props.history.push('/');
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -47,7 +81,7 @@ class App extends React.Component {
           <Route exact path="/" render={() => {
             if (this.state.currentUser) {
               return (
-                <Main />
+                <Main logout={this.logout}/>
               )
             } else {
               return (
@@ -57,7 +91,7 @@ class App extends React.Component {
           }} />
           <Route exact path="/user/:username" render={() => {
             return (
-              <User currentUser={this.state.currentUser}/>
+              <User currentUser={this.state.currentUser} logout={this.logout}/>
             )
           }} />
         </Switch>

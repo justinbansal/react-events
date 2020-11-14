@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Nav from './Nav';
 import Event from './Event';
 import EventBuilder from './EventBuilder';
 import RegisteredEvents from './RegisteredEvents';
@@ -43,10 +43,6 @@ class Main extends React.Component {
     console.log('UPDATED!')
     localStorage.setItem('events', JSON.stringify(this.state.events));
     localStorage.setItem('users', JSON.stringify(this.state.users));
-  }
-
-  componentWillUnmount = () => {
-    console.log('UNMOUNT!')
   }
 
   addEvent = (event) => {
@@ -151,15 +147,7 @@ class Main extends React.Component {
     })
   }
 
-  logout = () => {
-    this.setState({
-      currentUser: null
-    })
-    localStorage.removeItem('currentUser');
-  }
-
   render() {
-    const logout = <button className="logout-button" onClick={this.logout}>Logout!</button>
 
     // If this person has registered events let's display them
     let showEvents;
@@ -170,26 +158,15 @@ class Main extends React.Component {
       />;
     }
 
-    let userLink = `user/${this.state.currentUser}`;
-
     return (
       <div className="container">
         <div className="row">
           <div className="col">
-            <ul className="nav">
-              <li className="nav-item">
-                <Link to={userLink}>Profile</Link>
-              </li>
-            </ul>
-          </div>
-          <div className="col col--welcome">
-            <p>Welcome {this.state.currentUser} :)</p>
-            {logout}
+            <Nav currentUser={this.state.currentUser} logout={this.props.logout}></Nav>
           </div>
         </div>
         <div className="row">
           <div className="col">
-            <h3>Events Feed</h3>
             <ul className="events">
               {this.state.events.length > 0 && this.state.events.map((element, index) => (
                 <Event
