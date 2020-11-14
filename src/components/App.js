@@ -90,9 +90,15 @@ class App extends React.Component {
             }
           }} />
           <Route exact path="/user/:username" render={() => {
-            return (
-              <User currentUser={this.state.currentUser} logout={this.logout}/>
-            )
+            if (this.state.currentUser) {
+              return (
+                <User currentUser={this.state.currentUser} logout={this.logout}/>
+              )
+            } else {
+              return (
+                <Login login={this.login}/>
+              )
+            }
           }} />
         </Switch>
       </BrowserRouter>
