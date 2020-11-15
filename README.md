@@ -1,5 +1,6 @@
 React Events
 
 - Create events
-- Sign up for events
-- Remove events that you've signed up for
+- Delete events
+- RSVP to events
+- Remove RSVP from events

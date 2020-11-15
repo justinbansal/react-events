@@ -1,21 +1,22 @@
 import React from 'react';
-import Event from './Event';
-import EventBuilder from './EventBuilder';
-import RegisteredEvents from './RegisteredEvents';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Main from './Main';
 import Login from './Login';
+import User from './User';
+import EventBuilder from './EventBuilder';
 import sampleEvents from '../sampleEvents';
 import sampleUsers from '../sampleUsers';
 
 class App extends React.Component {
   state = {
     events: [],
-    registeredEvents: [],
     currentUser: null,
     users: {}
   }
 
   componentDidMount = () => {
     console.log('MOUNTED');
+
     const localStorageRef = localStorage.getItem('events');
     if (localStorageRef) {
       this.setState({
@@ -40,35 +41,50 @@ class App extends React.Component {
   }
 
   componentDidUpdate = () => {
-    console.log('UPDATED!')
-    localStorage.setItem('events', JSON.stringify(this.state.events));
+    console.log('APP UPDATED!')
     localStorage.setItem('users', JSON.stringify(this.state.users));
+    localStorage.setItem('events', JSON.stringify(this.state.events));
   }
 
-  componentWillUnmount = () => {
-    console.log('UNMOUNT!')
+  login = (username) => {
+
+    if (username) {
+      if (this.state.users[username]) {
+
+        this.setState({
+          currentUser: username
+        })
+
+        localStorage.setItem('currentUser', username);
+
+      } else {
+        // create new user
+        const users = {...this.state.users};
+        users[username] = {
+          isAdmin: false,
+          registered: [],
+          created: []
+        }
+
+        this.setState({
+          users: users,
+          currentUser: username
+        })
+
+        localStorage.setItem('currentUser', username);
+      }
+    }
   }
 
-  addEvent = (event) => {
-    const events = this.state.events.slice();
-    events.push(event);
+  logout = () => {
     this.setState({
-      events: events
+      currentUser: null
     })
-
-    const users = {...this.state.users};
-    users[this.state.currentUser].created.push(event);
+    localStorage.removeItem('currentUser');
   }
 
-  loadSampleData = () => {
-    this.setState({
-      events: sampleEvents,
-      users: sampleUsers
-    })
-  }
-
-  formatMoney = (amount) => {
-    let dollars = amount.toLocaleString('en-us', {
+  formatMoney = (cents) => {
+    let dollars = (cents / 100).toLocaleString('en-us', {
       style: 'currency',
       currency: 'CAD'
     })
@@ -106,6 +122,17 @@ class App extends React.Component {
       events: updatedEvents
     })
 
+  }
+
+  addEvent = (event) => {
+    const events = this.state.events.slice();
+    events.push(event);
+    this.setState({
+      events: events
+    })
+
+    const users = {...this.state.users};
+    users[this.state.currentUser].created.push(event);
   }
 
   removeEvent = (e) => {
@@ -151,98 +178,86 @@ class App extends React.Component {
     })
   }
 
-  login = (username) => {
-    console.log(username);
+  deleteEvent = (e) => {
 
-    if (username) {
-      if (this.state.users[username]) {
-        // User exists
-        // Let them in
-        this.setState({
-          currentUser: username
-        })
+    console.log(e);
 
-        localStorage.setItem('currentUser', username);
+    // Variables
+    const eventID = parseInt(e.currentTarget.id);
 
-      } else {
-        // create new user
-        const users = {...this.state.users};
-        users[username] = {
-          isAdmin: false,
-          registered: [],
-          created: []
-        }
+    // 1. Get an array with the selected event removed
+    let updatedEvents = this.state.events.filter(function(event) {
+      return event.id !== eventID;
+    })
 
-        this.setState({
-          users: users,
-          currentUser: username
-        })
+    // 3. Update state object
+    const events = this.state.events.slice();
 
-        localStorage.setItem('currentUser', username);
-      }
-    }
+    // Update state with new user object
+    this.setState({
+      events: updatedEvents
+    })
   }
 
-  logout = () => {
+  loadSampleData = () => {
+    console.log('loadSampleData triggered');
     this.setState({
-      currentUser: null
+      events: sampleEvents,
+      users: sampleUsers
     })
-    localStorage.removeItem('currentUser');
   }
 
   render() {
-    const logout = <button className="logout-button" onClick={this.logout}>Logout!</button>
-
-    // If this person has registered events let's display them
-    let showEvents;
-    if (this.state.users[this.state.currentUser] && this.state.users[this.state.currentUser].registered.length > 0) {
-      showEvents = <RegisteredEvents
-      registeredEvents={this.state.users[this.state.currentUser].registered} formatMoney={this.formatMoney}
-      removeEvent={this.removeEvent}
-      />;
-    }
-
-    if (!this.state.currentUser) {
-      return <Login login={this.login}/>
-    }
-
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col col--welcome">
-            <p>Welcome {this.state.currentUser} :)</p>
-            {logout}
-          </div>
-        </div>
-        <div className="row">
-          <div className="col">
-            <h3>My Events</h3>
-            <ul className="events">
-              {this.state.events.length > 0 && this.state.events.map((element, index) => (
-                <Event
-                  key={index}
-                  index={index}
-                  details={this.state.events[index]}
-                  formatMoney={this.formatMoney}
-                  eventRSVP={this.eventRSVP}
-                  currentUser={this.state.currentUser}
-                />
-              ))}
-            </ul>
-            </div>
-          <div className="col">
-            <h3>Events Feed</h3>
-            {showEvents}
-          </div>
-          <div className="col">
-            <h3>Create Event</h3>
-            <div className="add-events">
-              <EventBuilder addEvent={this.addEvent} numberOfEvents={this.state.events.length} owner={this.state.currentUser}/>
-              <button onClick={this.loadSampleData}>Load Sample Data</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" render={(matchProps) => {
+            if (this.state.currentUser) {
+              return (
+                <div>
+                  <Main
+                    logout={this.logout}
+                    {...matchProps}
+                    formatMoney={this.formatMoney}
+                    events={this.state.events}
+                    eventRSVP={this.eventRSVP}
+                    currentUser={this.state.currentUser}
+                    deleteEvent={this.deleteEvent}
+                  />
+                </div>
+              )
+            } else {
+              return (
+                <Login login={this.login}/>
+              )
+            }
+          }} />
+          <Route exact path="/user/:username" render={(matchProps) => {
+            return (
+              <User
+                currentUser={this.state.currentUser}
+                logout={this.logout}
+                {...matchProps}
+                users={this.state.users}
+                currentUser={this.state.currentUser}
+                formatMoney={this.formatMoney}
+                removeEvent={this.removeEvent}
+              />
+            )
+          }} />
+          <Route exact path="/event/new" render={(matchProps) => {
+            return (
+              <EventBuilder
+                logout={this.logout}
+                {...matchProps}
+                owner={this.state.currentUser}
+                numberOfEvents={this.state.events.length}
+                addEvent={this.addEvent}
+              />
+            )
+          }} />
+        </Switch>
+      </BrowserRouter>
     )
   }
 }

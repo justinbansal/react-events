@@ -1,10 +1,12 @@
 import React from 'react';
 import { render } from 'react-dom';
-import Router from './components/Router';
+import App from './components/App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/style.scss';
+import 'jquery/dist/jquery.min.js'
+import 'bootstrap/dist/js/bootstrap.min.js';
 
-render(<Router />, document.querySelector('#root'));
+render(<App />, document.querySelector('#root'));
 
 
 
