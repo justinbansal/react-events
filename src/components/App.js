@@ -178,6 +178,27 @@ class App extends React.Component {
     })
   }
 
+  deleteEvent = (e) => {
+
+    console.log(e);
+
+    // Variables
+    const eventID = parseInt(e.currentTarget.id);
+
+    // 1. Get an array with the selected event removed
+    let updatedEvents = this.state.events.filter(function(event) {
+      return event.id !== eventID;
+    })
+
+    // 3. Update state object
+    const events = this.state.events.slice();
+
+    // Update state with new user object
+    this.setState({
+      events: updatedEvents
+    })
+  }
+
   loadSampleData = () => {
     console.log('loadSampleData triggered');
     this.setState({
@@ -201,8 +222,8 @@ class App extends React.Component {
                     events={this.state.events}
                     eventRSVP={this.eventRSVP}
                     currentUser={this.state.currentUser}
+                    deleteEvent={this.deleteEvent}
                   />
-                  <button onClick={this.loadSampleData}></button>
                 </div>
               )
             } else {

@@ -1,8 +1,6 @@
 import React from 'react';
 import Nav from './Nav';
 import Event from './Event';
-import EventBuilder from './EventBuilder';
-import RegisteredEvents from './RegisteredEvents';
 
 class Main extends React.Component {
 
@@ -31,6 +29,7 @@ class Main extends React.Component {
                   formatMoney={this.props.formatMoney}
                   eventRSVP={this.props.eventRSVP}
                   currentUser={this.props.currentUser}
+                  deleteEvent={this.props.deleteEvent}
                 />
               ))}
             </ul>

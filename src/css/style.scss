@@ -126,6 +126,7 @@ ul {
 .event__content {
   background: rgba(68, 108, 179, 0.5);
   padding: 10px;
+  position: relative;
 }
 
 .guests {
@@ -142,4 +143,10 @@ ul {
       margin-left: 0;
     }
   }
+}
+
+.btn-delete {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
