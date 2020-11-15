@@ -55,10 +55,11 @@ body {
   background-position: center;
   position: relative;
   color: #FFFFFF;
+}
 
-  li {
-    list-style-type: none;
-  }
+ul {
+  padding: 0;
+  width: 100%;
 }
 
 .event-name {
@@ -79,12 +80,6 @@ body {
   font-size: 20px;
 }
 
-ul {
-  padding: 0;
-  width: 100%;
-}
-
-// Login buttons
 .login-button {
   display: block;
   border: 0;
@@ -104,16 +99,11 @@ ul {
   background-color: #DD2C00;
 }
 
-.col--welcome {
-  display: flex;
-}
-
 .login-form input {
   padding: 10px;
   width: 300px;
 }
 
-// Login page
 .login {
   text-align: center;
   width: 100%;
@@ -130,5 +120,26 @@ ul {
 .nav-item--username {
   @media (min-width: 768px) {
     margin-left: auto;
+  }
+}
+
+.event__content {
+  background: rgba(68, 108, 179, 0.5);
+  padding: 10px;
+}
+
+.guests {
+  display: flex;
+  flex-wrap: wrap;
+
+  .guest {
+    margin: 10px;
+    background: navy;
+    padding: 5px 10px;
+    border-radius: 10px;
+
+    &:first-child {
+      margin-left: 0;
+    }
   }
 }

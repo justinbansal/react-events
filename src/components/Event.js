@@ -22,20 +22,21 @@ class Event extends React.Component {
 
     return (
       <li className="event-list--event" style={backgroundStyle}>
-        <h3 className="event-name">{name}</h3>
-        <p>{location}</p>
-        <p>{date}</p>
-        <p>{time}</p>
-        <p>Owner: {owner}</p>
-        <ul className="guests">
-          Guests:
-          {guests && guests.map((guest, index) => (
-            <li key={index}>{guest}</li>
-          ))}
-        </ul>
-        <div className="wrapper">
-          <span className="cost">{this.props.formatMoney(cost)}</span>
-          <button id={id} disabled={!showRSVPButton ? true : false} className="button__rsvp" onClick={this.props.eventRSVP}>RSVP</button>
+        <div className="event__content">
+          <h3 className="event-name">{name}</h3>
+          <p>{location}</p>
+          <p>{date}</p>
+          <p>{time}</p>
+          <p>Owner: {owner}</p>
+          <div className="guests">
+            {guests && guests.map((guest, index) => (
+              <div className="guest" key={index}>{guest}</div>
+            ))}
+          </div>
+          <div className="wrapper">
+            <span className="cost">{this.props.formatMoney(cost)}</span>
+            <button id={id} disabled={!showRSVPButton ? true : false} className="button__rsvp" onClick={this.props.eventRSVP}>RSVP</button>
+          </div>
         </div>
       </li>
     )
