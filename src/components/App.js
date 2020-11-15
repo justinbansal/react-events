@@ -180,8 +180,6 @@ class App extends React.Component {
 
   deleteEvent = (e) => {
 
-    console.log(e);
-
     // Variables
     const eventID = parseInt(e.currentTarget.id);
 
@@ -190,11 +188,20 @@ class App extends React.Component {
       return event.id !== eventID;
     })
 
-    // 3. Update state object
-    const events = this.state.events.slice();
+    // 2. Remove event from all users' registered events
+    const users = {...this.state.users};
 
-    // Update state with new user object
+    // For each user, if event in registered events array matches ID, remove it
+    for (let user in users) {;
+      let filteredEvents = users[user].registered.filter(function(event) {
+        return event.id !== eventID;
+      })
+      users[user].registered = filteredEvents;
+    }
+
+    // 3. Update state object
     this.setState({
+      users: users,
       events: updatedEvents
     })
   }
@@ -239,7 +246,6 @@ class App extends React.Component {
                 logout={this.logout}
                 {...matchProps}
                 users={this.state.users}
-                currentUser={this.state.currentUser}
                 formatMoney={this.formatMoney}
                 removeEvent={this.removeEvent}
               />
