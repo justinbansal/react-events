@@ -6,17 +6,6 @@ import RegisteredEvents from './RegisteredEvents';
 
 class Main extends React.Component {
 
-  addEvent = (event) => {
-    const events = this.state.events.slice();
-    events.push(event);
-    this.setState({
-      events: events
-    })
-
-    const users = {...this.state.users};
-    users[this.state.currentUser].created.push(event);
-  }
-
   render() {
 
     return (

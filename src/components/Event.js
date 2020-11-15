@@ -13,8 +13,15 @@ class Event extends React.Component {
       showRSVPButton = true;
     }
 
+    let backgroundStyle;
+    if (image) {
+      backgroundStyle = {backgroundImage: `url(${image})`}
+    } else {
+      backgroundStyle = {background: "#000000"}
+    }
+
     return (
-      <li className="event-list--event" style={{backgroundImage: `url(${image})`}}>
+      <li className="event-list--event" style={backgroundStyle}>
         <h3 className="event-name">{name}</h3>
         <p>{location}</p>
         <p>{date}</p>

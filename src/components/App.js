@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Main from './Main';
 import Login from './Login';
 import User from './User';
+import EventBuilder from './EventBuilder';
 import sampleEvents from '../sampleEvents';
 import sampleUsers from '../sampleUsers';
 
@@ -123,6 +124,17 @@ class App extends React.Component {
 
   }
 
+  addEvent = (event) => {
+    const events = this.state.events.slice();
+    events.push(event);
+    this.setState({
+      events: events
+    })
+
+    const users = {...this.state.users};
+    users[this.state.currentUser].created.push(event);
+  }
+
   removeEvent = (e) => {
 
     // Variables
@@ -209,6 +221,17 @@ class App extends React.Component {
                 currentUser={this.state.currentUser}
                 formatMoney={this.formatMoney}
                 removeEvent={this.removeEvent}
+              />
+            )
+          }} />
+          <Route exact path="/event/new" render={(matchProps) => {
+            return (
+              <EventBuilder
+                logout={this.logout}
+                {...matchProps}
+                owner={this.state.currentUser}
+                numberOfEvents={this.state.events.length}
+                addEvent={this.addEvent}
               />
             )
           }} />
