@@ -1,14 +1,16 @@
-import Rebase from 're-base'; // React firebase package to mirror state to our firebase changes
 import firebase from 'firebase';
 
-const firebaseApp = firebase.initializeApp({
-  apiKey: "AIzaSyCErIwlRoO9O6nvnOwHoVua5X39YMLbjfg",
-  authDomain: "react-events-b1478.firebaseapp.com",
-  databaseURL: "https://react-events-b1478.firebaseio.com"
-})
+// Your web app's Firebase configuration
+let firebaseConfig = {
+  apiKey: "AIzaSyBMHKfuUQUsV_h7ZErXss4H69SaOkjdxNQ",
+  authDomain: "react-events2.firebaseapp.com",
+  databaseURL: "https://react-events2.firebaseio.com",
+  projectId: "react-events2",
+  storageBucket: "react-events2.appspot.com",
+  messagingSenderId: "533101036325",
+  appId: "1:533101036325:web:9813351aeacca8e0c790cc"
+};
 
-const base = Rebase.createClass(firebaseApp.database());
+firebase.initializeApp(firebaseConfig);
 
-export { firebaseApp }; // named export
-
-export default base; // default export
+export default firebase;

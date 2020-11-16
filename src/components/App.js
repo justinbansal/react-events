@@ -6,6 +6,7 @@ import User from './User';
 import EventBuilder from './EventBuilder';
 import sampleEvents from '../sampleEvents';
 import sampleUsers from '../sampleUsers';
+import firebase from '../base';
 
 class App extends React.Component {
   state = {
@@ -56,6 +57,11 @@ class App extends React.Component {
         })
 
         localStorage.setItem('currentUser', username);
+
+        // Write currentUser to db
+        firebase.database().ref('/').set({
+          currentUser: username
+        });
 
       } else {
         // create new user
