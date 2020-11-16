@@ -148,33 +148,25 @@ class App extends React.Component {
     })
 
     // 2. Remove currentUser from guests of the deleted event as well
-
+    let events = this.state.events.slice();
     let filteredGuests;
-    let filteredEvents = this.state.events.map(function(event) {
+    events.forEach(function(event) {
       if (event.id === eventID) {
         filteredGuests = event.guests.filter(function(guest) {
           return guest !== currentUser;
         })
+        event.guests = filteredGuests;
       }
     })
 
     // 3. Update state object
     const users = {...this.state.users};
     users[currentUser].registered = registeredEvents;
-    const events = this.state.events.slice();
-
-    // Update guests in events array
-    const updatedEvents = events.map(function(event) {
-      if (event.id === eventID) {
-        event.guests = filteredGuests;
-      }
-      return event;
-    })
 
     // Update state with new user object
     this.setState({
       users : users,
-      events: updatedEvents
+      events: events
     })
   }
 
@@ -192,7 +184,7 @@ class App extends React.Component {
     const users = {...this.state.users};
 
     // For each user, if event in registered events array matches ID, remove it
-    for (let user in users) {;
+    for (let user in users) {
       let filteredEvents = users[user].registered.filter(function(event) {
         return event.id !== eventID;
       })
