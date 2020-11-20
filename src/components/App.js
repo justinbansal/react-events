@@ -18,33 +18,46 @@ class App extends React.Component {
   componentDidMount = () => {
     console.log('MOUNTED');
 
-    const localStorageRef = localStorage.getItem('events');
-    if (localStorageRef) {
-      this.setState({
-        events: JSON.parse(localStorageRef)
-      })
-    }
+    firebase.database().ref('users/').on('value', (snapshot) => {
+      const usersRef = snapshot.val();
+      if (usersRef) {
+        this.setState({
+          users: usersRef.users
+        })
+      }
+    })
 
-    const usersRef = localStorage.getItem('users');
-    if (usersRef) {
-      this.setState({
-        users: JSON.parse(usersRef)
-      })
-    }
+    firebase.database().ref('events/').on('value', (snapshot) => {
+      const eventsRef = snapshot.val();
+      if (eventsRef) {
+        this.setState({
+          events: eventsRef.events
+        })
+      }
+    })
 
-    // Check database to see if we have a currentUser defined
-    const currentUserRef = localStorage.getItem('currentUser');
-    if (currentUserRef) {
-      this.setState({
-        currentUser: currentUserRef
-      })
-    }
+    firebase.database().ref('currentUser/').on('value', (snapshot) => {
+      const userRef = snapshot.val();
+      if (userRef) {
+        this.setState({
+          currentUser: userRef
+        })
+      }
+    })
   }
 
   componentDidUpdate = () => {
     console.log('APP UPDATED!')
-    localStorage.setItem('users', JSON.stringify(this.state.users));
-    localStorage.setItem('events', JSON.stringify(this.state.events));
+
+    // Write users to db
+    firebase.database().ref('users/').set({
+      users: this.state.users
+    });
+
+    // Write events to db
+    firebase.database().ref('events/').set({
+      events: this.state.events
+    });
   }
 
   login = (username) => {
@@ -55,8 +68,6 @@ class App extends React.Component {
         this.setState({
           currentUser: username
         })
-
-        localStorage.setItem('currentUser', username);
 
         // Write currentUser to db
         firebase.database().ref('/').set({
@@ -77,7 +88,10 @@ class App extends React.Component {
           currentUser: username
         })
 
-        localStorage.setItem('currentUser', username);
+         // Write currentUser to db
+        firebase.database().ref('/').set({
+          currentUser: username
+        });
       }
     }
   }
@@ -87,6 +101,9 @@ class App extends React.Component {
       currentUser: null
     })
     localStorage.removeItem('currentUser');
+
+     // Delete record of currentUser
+    firebase.database().ref('currentUser').remove();
   }
 
   formatMoney = (cents) => {
@@ -105,6 +122,7 @@ class App extends React.Component {
 
     let updatedEvents = this.state.events.map(event => {
       if (event.id === eventID) {
+        event.guests = [];
         event.guests.push(currentUser);
       }
       return event;
@@ -138,6 +156,7 @@ class App extends React.Component {
     })
 
     const users = {...this.state.users};
+    users[this.state.currentUser].created = [];
     users[this.state.currentUser].created.push(event);
   }
 

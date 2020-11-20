@@ -7,7 +7,7 @@ class Event extends React.Component {
     // RSVP button should be disabled if the current user is already in the guests array
     let showRSVPButton = false;
 
-    if (guests.includes(this.props.currentUser)) {
+    if (guests && guests.includes(this.props.currentUser)) {
       showRSVPButton = false;
     } else {
       showRSVPButton = true;
