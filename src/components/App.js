@@ -79,8 +79,8 @@ class App extends React.Component {
         const users = {...this.state.users};
         users[username] = {
           isAdmin: false,
-          registered: [],
-          created: []
+          registered: false,
+          created: false
         }
 
         this.setState({
@@ -210,10 +210,12 @@ class App extends React.Component {
 
     // For each user, if event in registered events array matches ID, remove it
     for (let user in users) {
-      let filteredEvents = users[user].registered.filter(function(event) {
-        return event.id !== eventID;
-      })
-      users[user].registered = filteredEvents;
+      if (users[user].registered) {
+        let filteredEvents = users[user].registered.filter(function(event) {
+          return event.id !== eventID;
+        })
+        users[user].registered = filteredEvents;
+      }
     }
 
     // 3. Update state object
