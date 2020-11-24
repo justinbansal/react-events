@@ -18,12 +18,13 @@ class App extends React.Component {
   componentDidMount = () => {
     console.log('MOUNTED');
 
-    firebase.database().ref('users/').on('value', (snapshot) => {
-      const usersRef = snapshot.val();
-      console.log(usersRef);
-      if (usersRef) {
+    const usersRef = firebase.database().ref('users');
+    usersRef.on('value', snapshot => {
+      let users = snapshot.val();
+      console.log(users);
+      if (users) {
         this.setState({
-          users: usersRef.users
+          users: users.users
         })
       }
     })
@@ -34,7 +35,7 @@ class App extends React.Component {
       let newState = [];
       for (let event in events) {
         newState.push({
-          id: events[event].id,
+          id: event,
           cost: events[event].cost,
           date: events[event].date,
           image: events[event].image,
@@ -49,34 +50,20 @@ class App extends React.Component {
       })
     })
 
-    firebase.database().ref('currentUser/').on('value', (snapshot) => {
+    firebase.database().ref('currentUser').on('value', (snapshot) => {
       const userRef = snapshot.val();
       if (userRef) {
         this.setState({
-          currentUser: userRef
+          currentUser: userRef.currentUser
         })
       }
     })
   }
 
-  componentDidUpdate = () => {
-    console.log('APP UPDATED!')
-
-    // Write users to db
-    // firebase.database().ref('users/').set({
-    //   users: this.state.users
-    // });
-
-    // // Write events to db
-    // firebase.database().ref('events/').set({
-    //   events: this.state.events
-    // });
-  }
-
   componentWillUnmount = () => {
     console.log('UNMOUNTED!');
 
-    firebase.database().ref('users/').off();
+    firebase.database().ref('users').off();
     firebase.database().ref('events').off();
   }
 
@@ -90,7 +77,7 @@ class App extends React.Component {
         })
 
         // Write currentUser to db
-        firebase.database().ref('/currentUser').set({
+        firebase.database().ref('currentUser').set({
           currentUser: username
         });
 
@@ -109,7 +96,7 @@ class App extends React.Component {
         })
 
          // Write currentUser to db
-        firebase.database().ref('/').set({
+        firebase.database().ref('currentUser').set({
           currentUser: username
         });
       }
@@ -154,7 +141,9 @@ class App extends React.Component {
     // Filter all events based on currentUser and replace user's registeredEvents array with this array
 
     let events = updatedEvents.filter(function(event) {
-      return event.guests.includes(currentUser);
+      if (event.guests) {
+        return event.guests.includes(currentUser);
+      }
     })
 
     // Update state
@@ -175,6 +164,7 @@ class App extends React.Component {
     users[this.state.currentUser].created = [];
     users[this.state.currentUser].created.push(event);
 
+    // Create event
     const eventsRef = firebase.database().ref('events');
     eventsRef.push(event);
 
@@ -222,7 +212,7 @@ class App extends React.Component {
   deleteEvent = (e) => {
 
     // Variables
-    const eventID = parseInt(e.currentTarget.id);
+    const eventID = e.currentTarget.id;
 
     // 1. Get an array with the selected event removed
     let updatedEvents = this.state.events.filter(function(event) {
@@ -241,6 +231,10 @@ class App extends React.Component {
         users[user].registered = filteredEvents;
       }
     }
+
+    // Delete event from fb
+    const eventRef = firebase.database().ref(`/events/${eventID}`);
+    eventRef.remove();
 
     // 3. Update state object
     this.setState({
