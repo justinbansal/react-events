@@ -28,14 +28,25 @@ class App extends React.Component {
       }
     })
 
-    firebase.database().ref('events/').on('value', (snapshot) => {
-      const eventsRef = snapshot.val();
-      if (eventsRef) {
-        console.log(eventsRef);
-        this.setState({
-          events: eventsRef.events
+    const eventsRef = firebase.database().ref('events');
+    eventsRef.on('value', snapshot => {
+      let events = snapshot.val();
+      let newState = [];
+      for (let event in events) {
+        newState.push({
+          id: events[event].id,
+          cost: events[event].cost,
+          date: events[event].date,
+          image: events[event].image,
+          location: events[event].location,
+          name: events[event].name,
+          owner: events[event].owner,
+          time: events[event].time,
         })
       }
+      this.setState({
+        events: newState
+      })
     })
 
     firebase.database().ref('currentUser/').on('value', (snapshot) => {
@@ -52,21 +63,21 @@ class App extends React.Component {
     console.log('APP UPDATED!')
 
     // Write users to db
-    firebase.database().ref('users/').set({
-      users: this.state.users
-    });
+    // firebase.database().ref('users/').set({
+    //   users: this.state.users
+    // });
 
-    // Write events to db
-    firebase.database().ref('events/').set({
-      events: this.state.events
-    });
+    // // Write events to db
+    // firebase.database().ref('events/').set({
+    //   events: this.state.events
+    // });
   }
 
   componentWillUnmount = () => {
     console.log('UNMOUNTED!');
 
     firebase.database().ref('users/').off();
-    firebase.database().ref('events/').off();
+    firebase.database().ref('events').off();
   }
 
   login = (username) => {
@@ -79,7 +90,7 @@ class App extends React.Component {
         })
 
         // Write currentUser to db
-        firebase.database().ref('/').set({
+        firebase.database().ref('/currentUser').set({
           currentUser: username
         });
 
@@ -159,13 +170,18 @@ class App extends React.Component {
   addEvent = (event) => {
     const events = this.state.events.slice();
     events.push(event);
-    this.setState({
-      events: events
-    })
 
     const users = {...this.state.users};
     users[this.state.currentUser].created = [];
     users[this.state.currentUser].created.push(event);
+
+    const eventsRef = firebase.database().ref('events');
+    eventsRef.push(event);
+
+    this.setState({
+      users: users,
+      events: events
+    })
   }
 
   removeEvent = (e) => {
