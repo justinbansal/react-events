@@ -20,6 +20,7 @@ class App extends React.Component {
 
     firebase.database().ref('users/').on('value', (snapshot) => {
       const usersRef = snapshot.val();
+      console.log(usersRef);
       if (usersRef) {
         this.setState({
           users: usersRef.users
@@ -30,6 +31,7 @@ class App extends React.Component {
     firebase.database().ref('events/').on('value', (snapshot) => {
       const eventsRef = snapshot.val();
       if (eventsRef) {
+        console.log(eventsRef);
         this.setState({
           events: eventsRef.events
         })
@@ -58,6 +60,13 @@ class App extends React.Component {
     firebase.database().ref('events/').set({
       events: this.state.events
     });
+  }
+
+  componentWillUnmount = () => {
+    console.log('UNMOUNTED!');
+
+    firebase.database().ref('users/').off();
+    firebase.database().ref('events/').off();
   }
 
   login = (username) => {
@@ -100,7 +109,6 @@ class App extends React.Component {
     this.setState({
       currentUser: null
     })
-    localStorage.removeItem('currentUser');
 
      // Delete record of currentUser
     firebase.database().ref('currentUser').remove();
