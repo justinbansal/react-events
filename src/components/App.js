@@ -78,26 +78,22 @@ class App extends React.Component {
 
     let users = this.state.users;
     if (username) {
-      if (users.length > 0) { // if there are users
-        console.log('users state exists');
+      // Check if there are any users
+      if (users.length > 0) {
+
         for (let user in users) {
-          if (users[user].username) { // if user exists
-            console.log('user exists');
+          // If user matches one of our users, update currentUser only
+          if (users[user].username) {
             this.setState({
               currentUser: username
             })
 
-            // Write currentUser to db
             firebase.database().ref('currentUser').set({
               currentUser: username
             });
 
-            // Create users
-            const usersRef = firebase.database().ref('users');
-            usersRef.push(users);
-          } else { // if user doesn't exist
-            // create new user
-            console.log('create new user');
+          } else {
+            // If user does not match, create new user
             let newUser = {
               username: username,
               isAdmin: false,
@@ -112,19 +108,16 @@ class App extends React.Component {
               currentUser: username
             })
 
-            // Write currentUser to db
             firebase.database().ref('currentUser').set({
               currentUser: username
             });
 
-            // Create users
             const usersRef = firebase.database().ref('users');
             usersRef.push(users);
           }
         }
-      } else { // if there are no users
-        // create new user
-        console.log('create new user');
+      } else {
+        // If there are no users, create new user
         let newUser = {
           username: username,
           isAdmin: false,
@@ -139,12 +132,10 @@ class App extends React.Component {
           currentUser: username
         })
 
-        // Write currentUser to db
         firebase.database().ref('currentUser').set({
           currentUser: username
         });
 
-        // Create users
         const usersRef = firebase.database().ref('users');
         usersRef.push(users);
       }
