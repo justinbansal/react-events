@@ -20,7 +20,7 @@ class EventBuilder extends React.Component {
       image: this.imageRef.current.value,
       id: this.props.numberOfEvents + 1,
       owner: this.props.owner,
-      guests: []
+      guests: false
     }
     this.props.addEvent(event);
     this.props.history.push('/');

@@ -32,6 +32,7 @@ class App extends React.Component {
           name: events[event].name,
           owner: events[event].owner,
           time: events[event].time,
+          guests: events[event].guests
         })
       }
       this.setState({
@@ -48,8 +49,8 @@ class App extends React.Component {
           id: user,
           username: users[user].username,
           isAdmin: false,
-          registered: false,
-          created: false
+          registered: users[user].registered,
+          created: users[user].created
         })
       }
       this.setState({
@@ -160,18 +161,27 @@ class App extends React.Component {
   }
 
   eventRSVP = (e) => {
+    console.log('eventRSVP');
 
     // Variables
-    const eventID = parseInt(e.currentTarget.id);
+    const eventID = e.currentTarget.id;
     const currentUser = this.state.currentUser;
 
     let updatedEvents = this.state.events.map(event => {
       if (event.id === eventID) {
-        event.guests = [];
-        event.guests.push(currentUser);
+        if (event.guests) {
+          console.log('guests array exists');
+          event.guests.push(currentUser);
+        } else {
+          console.log(currentUser);
+          event.guests = [];
+          event.guests.push(currentUser);
+        }
       }
       return event;
     })
+
+    console.log(updatedEvents);
 
     // For clicked RSVP event, guests array updates to include user
     // Need to also add event to the user's registeredEvents
@@ -180,14 +190,30 @@ class App extends React.Component {
     // Filter all events based on currentUser and replace user's registeredEvents array with this array
 
     let events = updatedEvents.filter(function(event) {
+      console.log(event);
       if (event.guests) {
+        return event.guests.includes(currentUser);
+      } else {
+        event.guests = [];
         return event.guests.includes(currentUser);
       }
     })
 
+    console.log(events);
+
     // Update state
     const users = {...this.state.users};
-    users[currentUser].registered = events;
+    for (let user in users) {
+      if (users[user].username === this.state.currentUser) {
+        if (users[user].registered) {
+          users[user].registered = events;
+        } else {
+          users[user].registered = [];
+          users[user].registered = events;
+        }
+      }
+    }
+
     this.setState({
       users: users,
       events: updatedEvents
@@ -207,7 +233,12 @@ class App extends React.Component {
     const users = {...this.state.users};
     for (let user in users) {
       if (users[user].username === this.state.currentUser) {
-        users[user].created.push(event);
+        if (users[user].created) {
+          users[user].created.push(event);
+        } else {
+          users[user].created = [];
+          users[user].created.push(event);
+        }
       }
     }
 
@@ -221,7 +252,7 @@ class App extends React.Component {
 
     // Variables
 
-    const eventID = parseInt(e.currentTarget.id);
+    const eventID = e.currentTarget.id;
     const currentUser = this.state.currentUser;
 
     // 1. Get an array with the selected event removed
