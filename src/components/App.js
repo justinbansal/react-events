@@ -170,18 +170,14 @@ class App extends React.Component {
     let updatedEvents = this.state.events.map(event => {
       if (event.id === eventID) {
         if (event.guests) {
-          console.log('guests array exists');
           event.guests.push(currentUser);
         } else {
-          console.log(currentUser);
           event.guests = [];
           event.guests.push(currentUser);
         }
       }
       return event;
     })
-
-    console.log(updatedEvents);
 
     // For clicked RSVP event, guests array updates to include user
     // Need to also add event to the user's registeredEvents
@@ -190,7 +186,6 @@ class App extends React.Component {
     // Filter all events based on currentUser and replace user's registeredEvents array with this array
 
     let events = updatedEvents.filter(function(event) {
-      console.log(event);
       if (event.guests) {
         return event.guests.includes(currentUser);
       } else {
@@ -198,8 +193,6 @@ class App extends React.Component {
         return event.guests.includes(currentUser);
       }
     })
-
-    console.log(events);
 
     // Update state
     const users = {...this.state.users};
