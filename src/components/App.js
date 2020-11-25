@@ -18,17 +18,6 @@ class App extends React.Component {
   componentDidMount = () => {
     console.log('MOUNTED');
 
-    const usersRef = firebase.database().ref('users');
-    usersRef.on('value', snapshot => {
-      let users = snapshot.val();
-      console.log(users);
-      if (users) {
-        this.setState({
-          users: users.users
-        })
-      }
-    })
-
     const eventsRef = firebase.database().ref('events');
     eventsRef.on('value', snapshot => {
       let events = snapshot.val();
@@ -47,6 +36,24 @@ class App extends React.Component {
       }
       this.setState({
         events: newState
+      })
+    })
+
+    const usersRef = firebase.database().ref('users');
+    usersRef.on('value', (snapshot) => {
+      let users = snapshot.val();
+      let newState = [];
+      for (let user in users) {
+        newState.push({
+          id: user,
+          username: users[user].username,
+          isAdmin: false,
+          registered: false,
+          created: false
+        })
+      }
+      this.setState({
+        users: newState
       })
     })
 
@@ -69,10 +76,66 @@ class App extends React.Component {
 
   login = (username) => {
 
+    let users = this.state.users;
     if (username) {
-      if (this.state.users[username]) {
+      if (users.length > 0) { // if there are users
+        console.log('users state exists');
+        for (let user in users) {
+          if (users[user].username) { // if user exists
+            console.log('user exists');
+            this.setState({
+              currentUser: username
+            })
+
+            // Write currentUser to db
+            firebase.database().ref('currentUser').set({
+              currentUser: username
+            });
+
+            // Create users
+            const usersRef = firebase.database().ref('users');
+            usersRef.push(users);
+          } else { // if user doesn't exist
+            // create new user
+            console.log('create new user');
+            let newUser = {
+              username: username,
+              isAdmin: false,
+              registered: false,
+              created: false
+            }
+
+            const users = {...this.state.users, ...newUser};
+
+            this.setState({
+              users: users,
+              currentUser: username
+            })
+
+            // Write currentUser to db
+            firebase.database().ref('currentUser').set({
+              currentUser: username
+            });
+
+            // Create users
+            const usersRef = firebase.database().ref('users');
+            usersRef.push(users);
+          }
+        }
+      } else { // if there are no users
+        // create new user
+        console.log('create new user');
+        let newUser = {
+          username: username,
+          isAdmin: false,
+          registered: false,
+          created: false
+        }
+
+        const users = {...this.state.users, ...newUser};
 
         this.setState({
+          users: users,
           currentUser: username
         })
 
@@ -81,24 +144,9 @@ class App extends React.Component {
           currentUser: username
         });
 
-      } else {
-        // create new user
-        const users = {...this.state.users};
-        users[username] = {
-          isAdmin: false,
-          registered: false,
-          created: false
-        }
-
-        this.setState({
-          users: users,
-          currentUser: username
-        })
-
-         // Write currentUser to db
-        firebase.database().ref('currentUser').set({
-          currentUser: username
-        });
+        // Create users
+        const usersRef = firebase.database().ref('users');
+        usersRef.push(users);
       }
     }
   }
@@ -160,13 +208,17 @@ class App extends React.Component {
     const events = this.state.events.slice();
     events.push(event);
 
-    const users = {...this.state.users};
-    users[this.state.currentUser].created = [];
-    users[this.state.currentUser].created.push(event);
-
     // Create event
     const eventsRef = firebase.database().ref('events');
     eventsRef.push(event);
+
+    // Add event to user's created aray
+    const users = {...this.state.users};
+    for (let user in users) {
+      if (users[user].username === this.state.currentUser) {
+        users[user].created.push(event);
+      }
+    }
 
     this.setState({
       users: users,
