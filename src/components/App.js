@@ -77,15 +77,6 @@ class App extends React.Component {
     firebase.database().ref('currentUser').off();
   }
 
-  logout = () => {
-    this.setState({
-      currentUser: null
-    })
-
-     // Delete record of currentUser
-    firebase.database().ref('currentUser').remove();
-  }
-
   formatMoney = (cents) => {
     let dollars = (cents / 100).toLocaleString('en-us', {
       style: 'currency',
@@ -338,12 +329,15 @@ class App extends React.Component {
     })
   }
 
-  googleSignOut = () => {
+  logout = () => {
     firebase.auth().signOut().then(() => {
       this.setState({
         currentUser: null,
         displayName: null
       })
+
+      // Delete record of currentUser
+      firebase.database().ref('currentUser').remove();
     })
   }
 
@@ -378,7 +372,7 @@ class App extends React.Component {
               <User
                 currentUser={this.state.currentUser}
                 displayName={this.state.displayName}
-                logout={this.googleSignOut}
+                logout={this.logout}
                 {...matchProps}
                 users={this.state.users}
                 formatMoney={this.formatMoney}
