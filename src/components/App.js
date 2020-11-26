@@ -247,33 +247,42 @@ class App extends React.Component {
 
     const eventID = e.currentTarget.id;
     const currentUser = this.state.currentUser;
-
-    // 1. Get an array with the selected event removed
-    let registeredEvents = this.state.users[currentUser].registered.filter(function(event) {
-      return event.id !== eventID;
-    })
-
-    // 2. Remove currentUser from guests of the deleted event as well
+    let users = this.state.users;
     let events = this.state.events.slice();
-    let filteredGuests;
-    events.forEach(function(event) {
-      if (event.id === eventID) {
-        filteredGuests = event.guests.filter(function(guest) {
-          return guest !== currentUser;
+
+    for (let user in users) {
+      // 1. Get an array with the selected event removed
+      if (users[user].username === currentUser) {
+        let registeredEvents = users[user].registered.filter(function(event) {
+          return event.id !== eventID;
+        });
+
+        // 2. Remove currentUser from guests of the deleted event as well
+        let filteredGuests;
+        events.forEach(function(event) {
+          if (event.id === eventID) {
+            filteredGuests = event.guests.filter(function(guest) {
+              return guest !== currentUser;
+            })
+            event.guests = filteredGuests;
+          }
         })
-        event.guests = filteredGuests;
+
+        // 3. Update state object
+        let updatedUsers = {...users};
+        for (let user in updatedUsers) {
+          if (updatedUsers[user].username === currentUser) {
+            updatedUsers[user].registered = registeredEvents;
+          }
+        }
+
+        // Update state with new user object
+        this.setState({
+          users : updatedUsers,
+          events: events
+        })
       }
-    })
-
-    // 3. Update state object
-    const users = {...this.state.users};
-    users[currentUser].registered = registeredEvents;
-
-    // Update state with new user object
-    this.setState({
-      users : users,
-      events: events
-    })
+    }
   }
 
   deleteEvent = (e) => {
