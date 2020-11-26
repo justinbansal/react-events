@@ -265,7 +265,7 @@ class App extends React.Component {
         // Check if this user exists in our app
         if (users.length > 0) {
           for (let user in users) {
-            if (users[user].username === userID) {
+            if (users[user].username) {
               this.setState({
                 currentUser: displayName,
                 userID
@@ -277,7 +277,7 @@ class App extends React.Component {
             } else {
               // User does not already exist so let's create the user
               let newUser = {
-                username: userID,
+                username: displayName,
                 isAdmin: false,
                 registered: false,
                 created: false
@@ -304,7 +304,7 @@ class App extends React.Component {
 
           // User does not already exist so let's create the user
           let newUser = {
-            username: userID,
+            username: displayName,
             isAdmin: false,
             registered: false,
             created: false
