@@ -6,12 +6,13 @@ import User from './User';
 import EventBuilder from './EventBuilder';
 import sampleEvents from '../sampleEvents';
 import sampleUsers from '../sampleUsers';
-import firebase from '../base';
+import firebase, { provider } from '../base';
 
 class App extends React.Component {
   state = {
     events: [],
     currentUser: null,
+    displayName: null,
     users: {}
   }
 
@@ -73,74 +74,7 @@ class App extends React.Component {
 
     firebase.database().ref('users').off();
     firebase.database().ref('events').off();
-  }
-
-  login = (username) => {
-
-    let users = this.state.users;
-    if (username) {
-      // Check if there are any users
-      if (users.length > 0) {
-
-        for (let user in users) {
-          // If user matches one of our users, update currentUser only
-          if (users[user].username) {
-            this.setState({
-              currentUser: username
-            })
-
-            firebase.database().ref('currentUser').set({
-              currentUser: username
-            });
-
-          } else {
-            // If user does not match, create new user
-            let newUser = {
-              username: username,
-              isAdmin: false,
-              registered: false,
-              created: false
-            }
-
-            const users = {...this.state.users, ...newUser};
-
-            this.setState({
-              users: users,
-              currentUser: username
-            })
-
-            firebase.database().ref('currentUser').set({
-              currentUser: username
-            });
-
-            const usersRef = firebase.database().ref('users');
-            usersRef.push(users);
-          }
-        }
-      } else {
-        // If there are no users, create new user
-        let newUser = {
-          username: username,
-          isAdmin: false,
-          registered: false,
-          created: false
-        }
-
-        const users = {...this.state.users, ...newUser};
-
-        this.setState({
-          users: users,
-          currentUser: username
-        })
-
-        firebase.database().ref('currentUser').set({
-          currentUser: username
-        });
-
-        const usersRef = firebase.database().ref('users');
-        usersRef.push(users);
-      }
-    }
+    firebase.database().ref('currentUser').off();
   }
 
   logout = () => {
@@ -327,6 +261,92 @@ class App extends React.Component {
     })
   }
 
+  login = () => {
+    firebase.auth().signInWithPopup(provider).then(result => {
+      const user = result.user;
+
+      let users = this.state.users;
+
+      // If user signed in
+      if (user) {
+        let userID = user.uid;
+        let displayName = user.displayName;
+        // Check if this user exists in our app
+        if (users.length > 0) {
+          for (let user in users) {
+            if (users[user].username === userID) {
+              this.setState({
+                currentUser: userID,
+                displayName: displayName
+              })
+
+              firebase.database().ref('currentUser').set({
+                currentUser: userID
+              });
+            } else {
+              // User does not already exist so let's create the user
+              let newUser = {
+                username: userID,
+                isAdmin: false,
+                registered: false,
+                created: false
+              }
+
+              const updatedUsers = {...users, ...newUser};
+
+              this.setState({
+                users: updatedUsers,
+                currentUser: userID,
+                displayName: displayName
+              })
+
+              firebase.database().ref('currentUser').set({
+                currentUser: userID
+              });
+
+              const usersRef = firebase.database().ref('users');
+              usersRef.push(updatedUsers);
+            }
+          }
+        } else {
+          // There are no users, create new user
+
+          // User does not already exist so let's create the user
+          let newUser = {
+            username: userID,
+            isAdmin: false,
+            registered: false,
+            created: false
+          }
+
+          const updatedUsers = {...users, ...newUser};
+
+          this.setState({
+            users: updatedUsers,
+            currentUser: userID,
+            displayName: displayName
+          })
+
+          firebase.database().ref('currentUser').set({
+            currentUser: userID
+          });
+
+          const usersRef = firebase.database().ref('users');
+          usersRef.push(updatedUsers);
+        }
+      }
+    })
+  }
+
+  googleSignOut = () => {
+    firebase.auth().signOut().then(() => {
+      this.setState({
+        currentUser: null,
+        displayName: null
+      })
+    })
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -342,6 +362,7 @@ class App extends React.Component {
                     events={this.state.events}
                     eventRSVP={this.eventRSVP}
                     currentUser={this.state.currentUser}
+                    displayName={this.state.displayName}
                     deleteEvent={this.deleteEvent}
                   />
                 </div>
@@ -356,7 +377,8 @@ class App extends React.Component {
             return (
               <User
                 currentUser={this.state.currentUser}
-                logout={this.logout}
+                displayName={this.state.displayName}
+                logout={this.googleSignOut}
                 {...matchProps}
                 users={this.state.users}
                 formatMoney={this.formatMoney}
@@ -370,6 +392,7 @@ class App extends React.Component {
                 logout={this.logout}
                 {...matchProps}
                 owner={this.state.currentUser}
+                displayName={this.state.displayName}
                 numberOfEvents={this.state.events.length}
                 addEvent={this.addEvent}
               />

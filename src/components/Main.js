@@ -12,6 +12,7 @@ class Main extends React.Component {
           <div className="col">
             <Nav
               currentUser={this.props.currentUser}
+              displayName={this.props.displayName}
               logout={this.props.logout}
               history={this.props.history}
               match={this.props.match}>

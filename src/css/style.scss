@@ -87,7 +87,11 @@ ul {
   width: 300px;
   color: #FFFFFF;
   margin: 20px auto;
-  background-color: #01579B;
+  background-color: #4c8bf5;
+
+  &:hover {
+    background-color: #01579B;
+  }
 }
 
 .logout-button {

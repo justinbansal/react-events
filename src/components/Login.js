@@ -5,7 +5,7 @@ class Login extends React.Component  {
 
   onSubmit = (e) => {
     e.preventDefault();
-    this.props.login(this.usernameRef.current.value)
+    this.props.login();
   }
 
   render() {
@@ -16,9 +16,8 @@ class Login extends React.Component  {
             <h2>Login to React Events</h2>
             <p>Enter a username to proceed</p>
             <form className="login-form" onSubmit={this.onSubmit}>
-              <input type="text" name="username" placeholder="Username" ref={this.usernameRef} required/>
               <button type="submit" className="login-button">
-                Login
+                Sign in with Google
               </button>
             </form>
           </div>
