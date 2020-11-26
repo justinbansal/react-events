@@ -12,7 +12,7 @@ class App extends React.Component {
   state = {
     events: [],
     currentUser: null,
-    displayName: null,
+    userID: null,
     users: {}
   }
 
@@ -267,12 +267,12 @@ class App extends React.Component {
           for (let user in users) {
             if (users[user].username === userID) {
               this.setState({
-                currentUser: userID,
-                displayName: displayName
+                currentUser: displayName,
+                userID
               })
 
               firebase.database().ref('currentUser').set({
-                currentUser: userID
+                currentUser: displayName
               });
             } else {
               // User does not already exist so let's create the user
@@ -287,12 +287,12 @@ class App extends React.Component {
 
               this.setState({
                 users: updatedUsers,
-                currentUser: userID,
-                displayName: displayName
+                currentUser: displayName,
+                userID
               })
 
               firebase.database().ref('currentUser').set({
-                currentUser: userID
+                currentUser: displayName
               });
 
               const usersRef = firebase.database().ref('users');
@@ -314,12 +314,12 @@ class App extends React.Component {
 
           this.setState({
             users: updatedUsers,
-            currentUser: userID,
-            displayName: displayName
+            currentUser: displayName,
+            userID
           })
 
           firebase.database().ref('currentUser').set({
-            currentUser: userID
+            currentUser: displayName
           });
 
           const usersRef = firebase.database().ref('users');
@@ -333,7 +333,7 @@ class App extends React.Component {
     firebase.auth().signOut().then(() => {
       this.setState({
         currentUser: null,
-        displayName: null
+        userID: null
       })
 
       // Delete record of currentUser
@@ -356,7 +356,6 @@ class App extends React.Component {
                     events={this.state.events}
                     eventRSVP={this.eventRSVP}
                     currentUser={this.state.currentUser}
-                    displayName={this.state.displayName}
                     deleteEvent={this.deleteEvent}
                   />
                 </div>
@@ -371,7 +370,6 @@ class App extends React.Component {
             return (
               <User
                 currentUser={this.state.currentUser}
-                displayName={this.state.displayName}
                 logout={this.logout}
                 {...matchProps}
                 users={this.state.users}
@@ -386,7 +384,6 @@ class App extends React.Component {
                 logout={this.logout}
                 {...matchProps}
                 owner={this.state.currentUser}
-                displayName={this.state.displayName}
                 numberOfEvents={this.state.events.length}
                 addEvent={this.addEvent}
               />

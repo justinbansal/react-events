@@ -34,7 +34,6 @@ class EventBuilder extends React.Component {
             <div className="col">
               <Nav
                 currentUser={this.props.owner}
-                displayName={this.props.displayName}
                 logout={this.props.logout}
                 history={this.props.history}
                 match={this.props.match}>

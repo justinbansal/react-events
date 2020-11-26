@@ -32,7 +32,7 @@ class Nav extends React.Component  {
               <NavLink className="nav-link" activeClassName="active" to="/event/new">Add Event</NavLink>
             </li>
             <li className="nav-item nav-item--username">
-              <NavLink className="nav-link" to="#">{this.props.displayName}</NavLink>
+              <NavLink className="nav-link" to="#">{this.props.currentUser}</NavLink>
             </li>
             {logout}
           </ul>
