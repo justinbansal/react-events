@@ -86,7 +86,6 @@ class App extends React.Component {
   }
 
   eventRSVP = (e) => {
-    console.log('eventRSVP');
 
     // Variables
     const eventID = e.currentTarget.id;
@@ -129,6 +128,7 @@ class App extends React.Component {
           users[user].registered = [];
           users[user].registered = events;
         }
+        firebase.database().ref('users').child(users[user].id).update(users[user]);
       }
     }
 
@@ -136,6 +136,11 @@ class App extends React.Component {
       users: users,
       events: updatedEvents
     })
+
+    // Update events and users in Firebase
+    firebase.database().ref('/').update({
+      events: events
+    });
 
   }
 
@@ -168,8 +173,9 @@ class App extends React.Component {
 
   removeEvent = (e) => {
 
-    // Variables
+    // @TODO: fix issue with IDs (events in registered can have different ID than events in feed)
 
+    // Variables
     const eventID = e.currentTarget.id;
     const currentUser = this.state.currentUser;
     let users = this.state.users;
