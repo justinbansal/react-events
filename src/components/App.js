@@ -50,8 +50,8 @@ class App extends React.Component {
           id: user,
           username: users[user].username,
           isAdmin: false,
-          registered: users[user].registered,
-          created: users[user].created
+          registered: users[user].registered ? users[user].registered : false,
+          created: users[user].created ? users[user].created: false
         })
       }
       this.setState({
@@ -354,14 +354,15 @@ class App extends React.Component {
   }
 
   logout = () => {
+
+    // Delete record of currentUser
+    firebase.database().ref('currentUser').remove();
+
     firebase.auth().signOut().then(() => {
       this.setState({
         currentUser: null,
         userID: null
       })
-
-      // Delete record of currentUser
-      firebase.database().ref('currentUser').remove();
     })
   }
 
