@@ -187,11 +187,12 @@ class App extends React.Component {
     for (let user in users) {
       // 1. Get an array with the selected event removed
       if (users[user].username === currentUser) {
-        let registeredEvents = users[user].registered.filter(function(event) {
-          return event.id !== eventID;
-        });
-
-        if (registeredEvents.length === 0) {
+        let registeredEvents;
+        if (users[user].registered.length > 0) {
+          registeredEvents = users[user].registered.filter(function(event) {
+            return event.id !== eventID;
+          });
+        } else {
           registeredEvents = false;
         }
 
@@ -286,7 +287,7 @@ class App extends React.Component {
         // Check if this user exists in our app
         if (users.length > 0) {
           for (let user in users) {
-            if (users[user].username) {
+            if (users[user].username === displayName) {
               this.setState({
                 currentUser: displayName,
                 userID
@@ -317,7 +318,7 @@ class App extends React.Component {
               });
 
               const usersRef = firebase.database().ref('users');
-              usersRef.push(updatedUsers);
+              usersRef.push(newUser);
             }
           }
         } else {
@@ -344,7 +345,7 @@ class App extends React.Component {
           });
 
           const usersRef = firebase.database().ref('users');
-          usersRef.push(updatedUsers);
+          usersRef.push(newUser);
         }
       }
     })
