@@ -222,10 +222,10 @@ class App extends React.Component {
         })
 
         // Update events and users in Firebase
-    firebase.database().ref('/').update({
-      events: events,
-      users: updatedUsers
-    });
+        firebase.database().ref('/').update({
+          events: events,
+          users: updatedUsers
+        });
       }
     }
   }
@@ -296,6 +296,8 @@ class App extends React.Component {
               firebase.database().ref('currentUser').set({
                 currentUser: displayName
               });
+
+              break;
             } else {
               // User does not already exist so let's create the user
               let newUser = {
