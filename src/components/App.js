@@ -33,7 +33,7 @@ class App extends React.Component {
           name: events[event].name,
           owner: events[event].owner,
           time: events[event].time,
-          guests: events[event].guests
+          guests: events[event].guests ? events[event].guests : false
         })
       }
       this.setState({
@@ -77,8 +77,8 @@ class App extends React.Component {
     firebase.database().ref('currentUser').off();
   }
 
-  formatMoney = (cents) => {
-    let dollars = (cents / 100).toLocaleString('en-us', {
+  formatMoney = (amount) => {
+    let dollars = amount.toLocaleString('en-us', {
       style: 'currency',
       currency: 'CAD'
     })
@@ -128,7 +128,6 @@ class App extends React.Component {
           users[user].registered = [];
           users[user].registered = events;
         }
-        firebase.database().ref('users').child(users[user].id).update(users[user]);
       }
     }
 
@@ -139,7 +138,8 @@ class App extends React.Component {
 
     // Update events and users in Firebase
     firebase.database().ref('/').update({
-      events: events
+      events: updatedEvents,
+      users: users
     });
 
   }
@@ -169,6 +169,11 @@ class App extends React.Component {
       users: users,
       events: events
     })
+
+    // Update users in Firebase
+    firebase.database().ref('/').update({
+      users: users
+    });
   }
 
   removeEvent = (e) => {
@@ -186,6 +191,10 @@ class App extends React.Component {
           return event.id !== eventID;
         });
 
+        if (registeredEvents.length === 0) {
+          registeredEvents = false;
+        }
+
         // 2. Remove currentUser from guests of the deleted event as well
         let filteredGuests;
         events.forEach(function(event) {
@@ -202,7 +211,6 @@ class App extends React.Component {
         for (let user in updatedUsers) {
           if (updatedUsers[user].username === currentUser) {
             updatedUsers[user].registered = registeredEvents;
-            firebase.database().ref('users').child(users[user].id).update(users[user]);
           }
         }
 
@@ -213,9 +221,10 @@ class App extends React.Component {
         })
 
         // Update events and users in Firebase
-        firebase.database().ref('/').update({
-          events: events
-        });
+    firebase.database().ref('/').update({
+      events: events,
+      users: updatedUsers
+    });
       }
     }
   }
@@ -243,15 +252,17 @@ class App extends React.Component {
       }
     }
 
-    // Delete event from fb
-    const eventRef = firebase.database().ref(`/events/${eventID}`);
-    eventRef.remove();
-
     // 3. Update state object
     this.setState({
       users: users,
       events: updatedEvents
     })
+
+    // Update events and users in Firebase
+    firebase.database().ref('/').update({
+      users: users,
+      events: updatedEvents
+    });
   }
 
   loadSampleData = () => {
