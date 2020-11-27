@@ -12,6 +12,7 @@ class App extends React.Component {
   state = {
     events: [],
     currentUser: null,
+    profilePic: null,
     userID: null,
     users: {}
   }
@@ -64,6 +65,15 @@ class App extends React.Component {
       if (userRef) {
         this.setState({
           currentUser: userRef.currentUser
+        })
+      }
+    })
+
+    firebase.database().ref('profilePic').on('value', (snapshot) => {
+      const profilePicRef = snapshot.val();
+      if (profilePicRef) {
+        this.setState({
+          profilePic: profilePicRef.profilePic
         })
       }
     })
@@ -284,17 +294,24 @@ class App extends React.Component {
       if (user) {
         let userID = user.uid;
         let displayName = user.displayName;
+        let profilePic = user.photoURL;
+        console.log(user);
         // Check if this user exists in our app
         if (users.length > 0) {
           for (let user in users) {
             if (users[user].username === displayName) {
               this.setState({
                 currentUser: displayName,
-                userID
+                userID,
+                profilePic
               })
 
               firebase.database().ref('currentUser').set({
                 currentUser: displayName
+              });
+
+              firebase.database().ref('profilePic').set({
+                profilePic: profilePic
               });
 
               break;
@@ -312,11 +329,16 @@ class App extends React.Component {
               this.setState({
                 users: updatedUsers,
                 currentUser: displayName,
-                userID
+                userID,
+                profilePic
               })
 
               firebase.database().ref('currentUser').set({
                 currentUser: displayName
+              });
+
+              firebase.database().ref('profilePic').set({
+                profilePic: profilePic
               });
 
               const usersRef = firebase.database().ref('users');
@@ -339,11 +361,16 @@ class App extends React.Component {
           this.setState({
             users: updatedUsers,
             currentUser: displayName,
-            userID
+            userID,
+            profilePic
           })
 
           firebase.database().ref('currentUser').set({
             currentUser: displayName
+          });
+
+          firebase.database().ref('profilePic').set({
+            profilePic: profilePic
           });
 
           const usersRef = firebase.database().ref('users');
@@ -358,10 +385,13 @@ class App extends React.Component {
     // Delete record of currentUser
     firebase.database().ref('currentUser').remove();
 
+    firebase.database().ref('profilePic').remove();
+
     firebase.auth().signOut().then(() => {
       this.setState({
         currentUser: null,
-        userID: null
+        userID: null,
+        profilePic: null
       })
     })
   }
@@ -381,6 +411,7 @@ class App extends React.Component {
                     events={this.state.events}
                     eventRSVP={this.eventRSVP}
                     currentUser={this.state.currentUser}
+                    profilePic={this.state.profilePic}
                     deleteEvent={this.deleteEvent}
                   />
                 </div>
@@ -395,6 +426,7 @@ class App extends React.Component {
             return (
               <User
                 currentUser={this.state.currentUser}
+                profilePic={this.state.profilePic}
                 logout={this.logout}
                 {...matchProps}
                 users={this.state.users}
@@ -409,6 +441,7 @@ class App extends React.Component {
                 logout={this.logout}
                 {...matchProps}
                 owner={this.state.currentUser}
+                profilePic={this.state.profilePic}
                 numberOfEvents={this.state.events.length}
                 addEvent={this.addEvent}
               />

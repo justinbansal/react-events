@@ -121,9 +121,18 @@ ul {
   margin-top: 20px;
 }
 
-.nav-item--username {
+.navbar-nav {
+  align-items: center;
+}
+
+.nav-item--photo {
   @media (min-width: 768px) {
     margin-left: auto;
+  }
+
+  img {
+    width: 50px;
+    border-radius: 50px;
   }
 }
 

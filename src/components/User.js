@@ -28,6 +28,7 @@ class User extends React.Component {
             <div className="col">
               <Nav
                 currentUser={this.props.currentUser}
+                profilePic={this.props.profilePic}
                 logout={this.props.logout}
                 history={this.props.history}
                 match={this.props.match}>
