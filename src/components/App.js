@@ -25,7 +25,7 @@ class App extends React.Component {
       let newState = [];
       for (let event in events) {
         newState.push({
-          id: event,
+          id: events[event].id,
           cost: events[event].cost,
           date: events[event].date,
           image: events[event].image,
@@ -172,8 +172,6 @@ class App extends React.Component {
   }
 
   removeEvent = (e) => {
-
-    // @TODO: fix issue with IDs (events in registered can have different ID than events in feed)
 
     // Variables
     const eventID = e.currentTarget.id;
