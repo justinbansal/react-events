@@ -204,6 +204,7 @@ class App extends React.Component {
         for (let user in updatedUsers) {
           if (updatedUsers[user].username === currentUser) {
             updatedUsers[user].registered = registeredEvents;
+            firebase.database().ref('users').child(users[user].id).update(users[user]);
           }
         }
 
@@ -212,6 +213,11 @@ class App extends React.Component {
           users : updatedUsers,
           events: events
         })
+
+        // Update events and users in Firebase
+        firebase.database().ref('/').update({
+          events: events
+        });
       }
     }
   }
