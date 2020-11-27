@@ -13,6 +13,8 @@ class Nav extends React.Component  {
 
     let userLink = `/user/${this.props.currentUser}`;
 
+    const profilePicture = <img src={this.props.profilePic} alt={this.props.currentUser} />
+
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <NavLink className="navbar-brand" to="/">React Events</NavLink>
@@ -31,8 +33,11 @@ class Nav extends React.Component  {
             <li className="nav-item">
               <NavLink className="nav-link" activeClassName="active" to="/event/new">Add Event</NavLink>
             </li>
+            <li className="nav-item nav-item--photo">
+              {profilePicture}
+            </li>
             <li className="nav-item nav-item--username">
-              <NavLink className="nav-link" to="#">{this.props.match.params.username ? this.props.match.params.username : this.props.currentUser }</NavLink>
+              <NavLink className="nav-link" to="#">{this.props.currentUser}</NavLink>
             </li>
             {logout}
           </ul>

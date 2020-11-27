@@ -87,7 +87,11 @@ ul {
   width: 300px;
   color: #FFFFFF;
   margin: 20px auto;
-  background-color: #01579B;
+  background-color: #4c8bf5;
+
+  &:hover {
+    background-color: #01579B;
+  }
 }
 
 .logout-button {
@@ -117,9 +121,18 @@ ul {
   margin-top: 20px;
 }
 
-.nav-item--username {
+.navbar-nav {
+  align-items: center;
+}
+
+.nav-item--photo {
   @media (min-width: 768px) {
     margin-left: auto;
+  }
+
+  img {
+    width: 50px;
+    border-radius: 50px;
   }
 }
 

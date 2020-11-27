@@ -12,6 +12,7 @@ class Main extends React.Component {
           <div className="col">
             <Nav
               currentUser={this.props.currentUser}
+              profilePic={this.props.profilePic}
               logout={this.props.logout}
               history={this.props.history}
               match={this.props.match}>
@@ -21,7 +22,7 @@ class Main extends React.Component {
         <div className="row">
           <div className="col">
             <ul className="events">
-              {this.props.events.length > 0 && this.props.events.map((element, index) => (
+              {this.props.events && this.props.events.map((element, index) => (
                 <Event
                   key={index}
                   index={index}

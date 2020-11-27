@@ -10,13 +10,15 @@ class User extends React.Component {
 
     // If this person has registered events let's display them
     let showEvents;
-    if (users[currentUser] && users[currentUser].registered.length > 0) {
-      showEvents =
-        <RegisteredEvents
-          registeredEvents={users[currentUser].registered}
-          formatMoney={this.props.formatMoney}
-          removeEvent={this.props.removeEvent}
-        />;
+    for (let user in users) {
+      if (users[user].username === currentUser && users[user].registered) {
+        showEvents =
+          <RegisteredEvents
+            registeredEvents={users[user].registered}
+            formatMoney={this.props.formatMoney}
+            removeEvent={this.props.removeEvent}
+          />;
+      }
     }
 
     return (
@@ -26,6 +28,7 @@ class User extends React.Component {
             <div className="col">
               <Nav
                 currentUser={this.props.currentUser}
+                profilePic={this.props.profilePic}
                 logout={this.props.logout}
                 history={this.props.history}
                 match={this.props.match}>

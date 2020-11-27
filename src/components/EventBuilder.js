@@ -18,9 +18,9 @@ class EventBuilder extends React.Component {
       time: this.timeRef.current.value,
       cost: this.costRef.current.value ? parseFloat(this.costRef.current.value) : 0,
       image: this.imageRef.current.value,
-      id: this.props.numberOfEvents + 1,
+      id: (this.props.numberOfEvents + 1).toString(),
       owner: this.props.owner,
-      guests: []
+      guests: false
     }
     this.props.addEvent(event);
     this.props.history.push('/');
@@ -34,6 +34,7 @@ class EventBuilder extends React.Component {
             <div className="col">
               <Nav
                 currentUser={this.props.owner}
+                profilePic={this.props.profilePic}
                 logout={this.props.logout}
                 history={this.props.history}
                 match={this.props.match}>
